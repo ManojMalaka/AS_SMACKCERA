@@ -48,7 +48,7 @@ public class OrderController {
     public static final String REFNO = "RefNo";
     public static final String TXNDATE = "TxnDate";
     public static final String REPCODE = "RepCode";
-    public static final String DEALCODE = "DealCode";
+        public static final String DEALCODE = "DealCode";
     public static final String DEBCODE = "DebCode";
 
 
@@ -736,7 +736,9 @@ public class OrderController {
             presale.setORDER_DEBCODE(cursor.getString(cursor.getColumnIndex(DEBCODE)));
             presale.setORDER_DEBNAME(cursor.getString(cursor.getColumnIndex(FORDHED_DEBNAME)));
            // presale.setORDER_ADDTIME(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
+
             presale.setORDER_START_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
+            presale.setORDER_LOCCODE(cursor.getString(cursor.getColumnIndex(FORDHED_LOC_CODE)));
             presale.setORDER_END_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_END_TIME_SO)));
             presale.setORDER_AREACODE(cursor.getString(cursor.getColumnIndex(FORDHED_AREA_CODE)));
             presale.setORDER_DEALCODE(cursor.getString(cursor.getColumnIndex(DEALCODE)));

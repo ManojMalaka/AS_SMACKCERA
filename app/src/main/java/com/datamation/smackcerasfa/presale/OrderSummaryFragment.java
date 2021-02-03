@@ -404,7 +404,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
             alertDialogBuilder.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                 public void onClick(final DialogInterface dialog, int id) {
-
+// mms modification 2021/02/03 LocCode error
                     Order ordHed = new Order();
                     ArrayList<Order> ordHedList = new ArrayList<Order>();
                     Order presale = new OrderController(getActivity()).getAllActiveOrdHed();
