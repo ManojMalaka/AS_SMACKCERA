@@ -817,6 +817,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                                     }
 //                                   List<String> testList = new ArrayList<>();
 //                                    for(final Order order :ordHedList) {
+
                                         new UploadPreSales(getActivity(), FragmentTools.this, UPLOADPRESALES).execute(ordHedList);
 //                                        try {
 //                                            String content_type = "application/json";
