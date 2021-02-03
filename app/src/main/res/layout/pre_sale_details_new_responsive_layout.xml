@@ -219,6 +219,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -236,15 +237,15 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-<!--                <Button-->
-<!--                    android:id="@+id/ibtDisc"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:layout_marginRight="5dp"-->
-<!--                    android:background="@color/theme_color"-->
-<!--                    android:text="FREE"-->
-<!--                    android:textStyle="bold" />-->
+                <!--                <Button-->
+                <!--                    android:id="@+id/ibtDisc"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginLeft="5dp"-->
+                <!--                    android:layout_marginRight="5dp"-->
+                <!--                    android:background="@color/theme_color"-->
+                <!--                    android:text="FREE"-->
+                <!--                    android:textStyle="bold" />-->
                 <ImageButton
                     android:id="@+id/ibtDisc"
                     android:layout_width="20dp"
@@ -273,7 +274,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/unselected"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
                 <com.datamation.smackcerasfa.utils.CustomFont
                     android:layout_width="0dp"
@@ -297,7 +299,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/custom_label"
                     android:gravity="center"
-                    android:text="QTY"
+                    android:text="AMOUNT"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/unselected"
                     android:textSize="14sp"

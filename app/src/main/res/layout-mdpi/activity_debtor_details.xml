@@ -296,11 +296,10 @@
 
         android:layout_above="@+id/outlet_details_fab_non_productive"
 
-
-
         android:layout_marginRight="21dp"
 
-        android:layout_marginBottom="25dp"/>
+        android:layout_marginBottom="25dp"
+        android:visibility="gone"/>
 
 
 
@@ -323,7 +322,7 @@
         android:text="RECEIPT"
 
         android:gravity="center"
-
+        android:visibility="gone"
        />
 
     <at.markushi.ui.CircleButton

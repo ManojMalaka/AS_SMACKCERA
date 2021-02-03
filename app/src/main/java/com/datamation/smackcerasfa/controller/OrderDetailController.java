@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * Created by Rashmi
  */
-
+/* *************** ** New Moodifications by MMS 2021/01 ** ************************** */
 public class OrderDetailController {
     private SQLiteDatabase dB;
     private DatabaseHelper dbHelper;
@@ -575,6 +575,7 @@ public class OrderDetailController {
                 ordDet.setFORDERDET_IS_ACTIVE(cursor.getString(cursor.getColumnIndex(FORDDET_IS_ACTIVE)));
                 ordDet.setFORDERDET_TYPE(cursor.getString(cursor.getColumnIndex(FORDDET_TYPE)));
                 ordDet.setFORDERDET_TXNTYPE(cursor.getString(cursor.getColumnIndex(FORDDET_TXN_TYPE)));
+                ordDet.setFORDERDET_DISAMT(cursor.getString(cursor.getColumnIndex(FORDDET_DIS_AMT)));
 
                 // this line add due to SortDiscount needs SCHDISPER for the calculation line no 123
                 ordDet.setFORDERDET_SCHDISPER(cursor.getString(cursor.getColumnIndex(FORDDET_DIS_PER)));
@@ -1239,6 +1240,58 @@ public class OrderDetailController {
             dB.close();
         }
 
+    }
+
+    public int UpdateOrdDis(ArrayList<OrderDisc> list) {
+
+        int count = 0;
+
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+        Cursor cursor = null;
+
+        try {
+            for (OrderDisc ordDetDis : list) {
+
+                String selectQuery = "SELECT * FROM " + TABLE_FORDDET + " WHERE " + FORDDET_TXN_TYPE + "='22' AND " + REFNO + "='" + ordDetDis.getRefNo() + "' AND " + FORDDET_ITEM_CODE + "='" + ordDetDis.getItemCode() + "'";
+
+                cursor = dB.rawQuery(selectQuery, null);
+
+                // ContentValues values = new ContentValues();
+
+                String DetAmt = "0.00";
+                String DetDisAmt = "0.00";
+                String NewAmt = "0.00";
+                while (cursor.moveToNext()) {
+
+                    ContentValues values = new ContentValues();
+
+                    DetAmt = cursor.getString(cursor.getColumnIndex(FORDDET_AMT));
+                    DetDisAmt = cursor.getString(cursor.getColumnIndex(FORDDET_DIS_AMT));
+
+                    NewAmt = String.valueOf((Double.valueOf(DetAmt) + Double.valueOf(DetDisAmt)) - Double.valueOf(ordDetDis.getDisPer()));
+
+                    values.put(FORDDET_AMT, NewAmt);
+                    values.put(FORDDET_B_AMT, NewAmt);
+                    values.put(FORDDET_B_DIS_AMT, ordDetDis.getDisAmt());
+                    values.put(FORDDET_DIS_AMT, ordDetDis.getDisAmt());
+                    values.put(FORDDET_DIS_PER, ordDetDis.getDisPer());
+
+                    count = dB.update(TABLE_FORDDET, values, FORDDET_TXN_TYPE + "='22' AND " + REFNO + "='" + ordDetDis.getRefNo() + "' AND " + FORDDET_ITEM_CODE + "='" + ordDetDis.getItemCode() + "'", null);
+                }
+
+            }
+
+        } catch (Exception ex) {
+            Log.v(TAG + " Exception", ex.toString());
+        } finally {
+            dB.close();
+        }
+
+        return count;
     }
 
     public ArrayList<OrderDetail> getAllFreeIssue(String refno) {

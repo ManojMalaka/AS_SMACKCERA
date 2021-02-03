@@ -333,4 +333,25 @@ public class OrderDiscController {
 
     }
 
+    public int restData() {
+
+        int count = 0;
+
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+        // Cursor cursor = null;
+
+        try {
+            count = dB.delete(TABLE_FORDDISC, null, null);
+
+        } finally {
+            dB.close();
+        }
+
+        return count;
+    }
+
 }

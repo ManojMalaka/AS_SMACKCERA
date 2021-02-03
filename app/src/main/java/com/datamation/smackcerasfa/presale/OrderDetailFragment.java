@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.datamation.smackcerasfa.R;
 import com.datamation.smackcerasfa.adapter.FreeIssueAdapter;
+import com.datamation.smackcerasfa.adapter.OrderDetailsAdapter;
 import com.datamation.smackcerasfa.adapter.OrderDetailsAdapterNew;
 import com.datamation.smackcerasfa.adapter.OrderFreeItemAdapter;
 import com.datamation.smackcerasfa.adapter.PreOrderAdapter;
@@ -262,7 +263,7 @@ public class OrderDetailFragment extends Fragment {
                         ArrayList<OrderDetail> dets = new OrderDetailController(getActivity()).getSAForFreeIssueCalc(referenceNum.getCurrentRefNo(getResources().getString(R.string.NumVal)));
 
 //                        // new
-                         new OrderDetailController(getActivity()).restFreeIssueData(referenceNum.getCurrentRefNo(getResources().getString(R.string.NumVal)));
+//                         new OrderDetailController(getActivity()).restFreeIssueData(referenceNum.getCurrentRefNo(getResources().getString(R.string.NumVal)));
 
                         fatchData();
 
@@ -271,12 +272,11 @@ public class OrderDetailFragment extends Fragment {
                         discountDialogBox(disItemDetails);
 
                         fatchData();
+                        clickCount++;
                     } catch (Exception e) {
                         Log.v("Exception", e.toString());
                     }
 
-
-                    clickCount++;
                 } else {
                     Toast.makeText(getActivity(), "Already clicked", Toast.LENGTH_LONG).show();
                     Log.v("Freeclick Count", mSharedPref.getGlobalVal("preKeyIsFreeClicked"));
@@ -339,11 +339,11 @@ public class OrderDetailFragment extends Fragment {
 
     public void fatchData() {
         try {
-            lv_order_det = (ListView) view.findViewById(R.id.lv_order_det);
-            lv_order_det.clearTextFilter();
-//            OrdDetDS detDS = new OrdDetDS(getActivity());
-//            orderList = detDS.getAllOrderDetails(activity.selectedOrdHed.getFORDHED_REFNO());
-//            lv_order_det.setAdapter(new OrderDetailsAdapter(getActivity(), orderList));//            MainActivity activity = (MainActivity) getActivity();
+
+            lvFree.clearTextFilter();
+            OrderDetailController detDS = new OrderDetailController(getActivity());
+            orderList = detDS.getAllOrderDetails(RefNo);
+            lvFree.setAdapter(new OrderDetailsAdapter(getActivity(), orderList,mSharedPref.getSelectedDebCode()));//            MainActivity activity = (MainActivity) getActivity();
 
         } catch (NullPointerException e) {
             Log.v("SA Error", e.toString());
@@ -361,17 +361,13 @@ public class OrderDetailFragment extends Fragment {
 
         for (OrderDisc disitem : disitemDetails) {
             totdisamt = totdisamt + Double.parseDouble(disitem.getDisAmt());
-            OrdRefNo = disitem.getRefNo();
-            OrdItemCode = disitem.getItemCode();
-            OrdItemDis = Double.parseDouble(disitem.getDisAmt());
-
         }
 
-//        disupd.restData();
+        disupd.restData();
         disupd.createOrUpdateOrdDisc(disitemDetails);
-//        disupd.UpdateOrdDis(disitemDetails);
+        new OrderDetailController(getActivity()).UpdateOrdDis(disitemDetails);
 
-        Toast.makeText(getContext(),"Calculated Discount "+String.valueOf(totdisamt), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),"Calculated Discount "+totdisamt, Toast.LENGTH_SHORT).show();
 
         ibtDiscount.setClickable(true);
 
