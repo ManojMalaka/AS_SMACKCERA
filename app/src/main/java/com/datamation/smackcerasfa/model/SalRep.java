@@ -273,7 +273,7 @@ public class SalRep {
             user.setPASSWORD(instance.getString("Password"));
             user.setRECORDID(instance.getString("RecordId"));
             user.setSALESFLAG(instance.getString("SalesFlg"));
-
+            user.setMACID(instance.getString("MacId"));
             return user;
         }
 

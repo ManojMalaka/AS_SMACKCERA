@@ -136,6 +136,7 @@ public class SalRepController {
                 values.put(FSALREP_PASSWORD, rep.getPASSWORD());
                 values.put(FSALREP_RECORD_ID, rep.getRECORDID());
                 values.put(FSALREP_SALES_FLAG, rep.getSALESFLAG());
+                values.put(FSALREP_MACID, rep.getMACID());
 
 //Menaka
                 if (cursor.getCount() > 0) {
