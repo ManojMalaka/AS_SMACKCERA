@@ -426,7 +426,7 @@ public class OrderHeaderFragment extends Fragment implements DatePickerDialog.On
             hed.setORDER_REMARKS(txtRemakrs.getText().toString());
             hed.setORDER_IS_ACTIVE("1");
             hed.setORDER_ADDDATE(currentTime());
-//            hed.setORDER_ADDMACH(new SalRepController(getActivity()).getMacId());
+            hed.setORDER_ADDMACH(new SalRepController(getActivity()).getMacId());
             hed.setORDER_LOCCODE("HO");
             hed.setORDER_START_TIMESO(currentTime());
             hed.setORDER_REPCODE(new SalRepController(getActivity()).getCurrentRepCode().trim());

@@ -532,7 +532,7 @@ public class OrderReturnFragment extends Fragment implements View.OnClickListene
                 list.clear();
                // list = new ItemController(getActivity()).getAllItem(newText, "TxnType ='SR'", RetRefNo, new SalRepController(getActivity()).getCurrentLocCode(),activity.selectedDebtor.getCusPrilCode());
                 //2019-10-10 because loccode and prilcode hardcode for swadeshi
-                list = new ItemController(getActivity()).getAllItem(newText, "TxnType ='SR'", RetRefNo, "MS","WSP001");
+                list = new ItemController(getActivity()).getAllItem(newText, "TxnType ='SR'", RetRefNo, "MS","PR001");
                 productList.clearTextFilter();
                 productList.setAdapter(new ProductAdapter(getActivity(), list));
                 return false;

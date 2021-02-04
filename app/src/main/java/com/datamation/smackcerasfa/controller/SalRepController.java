@@ -87,6 +87,7 @@ public class SalRepController {
             + FSALREP_PASSWORD + " TEXT, "
             + FSALREP_SALES_FLAG + " TEXT, "
             + FSALREP_CHK_UPLOAD + " TEXT,"
+            + FSALREP_MACID + " TEXT,"
             + FSALREP_ISSYNC + " TEXT); ";
 
     public SalRepController(Context context) {

@@ -624,7 +624,7 @@ public class InnerReturnDetails extends Fragment implements OnClickListener {
 
             itemList = null;
             // itemList = new ItemsDS(getActivity()).getAllItem("", "TxnType ='SR'", RefNo, new SalRepController(getActivity()).getCurrentLocCode(),SharedPref.getInstance(getActivity()).getSelectedDebtorPrilCode());
-            list = new ItemController(getActivity()).getAllItemForSalesReturn("","","","COL02","WSP001");
+            list = new ItemController(getActivity()).getAllItemForSalesReturn("","","","COL02","PR001");
 
             return itemList;
         }

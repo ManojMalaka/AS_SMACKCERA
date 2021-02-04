@@ -1349,7 +1349,7 @@ public class OrderDetailController {
                 String TaxedAmt = "0.00";
                 SODet.setFORDERDET_AMT(String.valueOf(amt));
                 SODet.setFORDERDET_ITEMCODE(tempOrder.getPREPRODUCT_ITEMCODE());
-                SODet.setFORDERDET_PRILCODE("WSP001");
+                SODet.setFORDERDET_PRILCODE("PR001");
                 SODet.setFORDERDET_QTY(qty);
                 SODet.setFORDERDET_REFNO(refno);
                 SODet.setFORDERDET_PRICE("0.00");
@@ -1409,7 +1409,7 @@ public class OrderDetailController {
                  SODet.setFORDERDET_FREEQTY("0");
                  SODet.setFORDERDET_ITEMCODE(tempOrder.getPREPRODUCT_ITEMCODE());
                  SODet.setFORDERDET_PDISAMT("0");
-                 SODet.setFORDERDET_PRILCODE("WSP001");
+                 SODet.setFORDERDET_PRILCODE("PR001");
                  SODet.setFORDERDET_QTY(qty);
                  SODet.setFORDERDET_PICE_QTY(tempOrder.getPREPRODUCT_QTY());
                  SODet.setFORDERDET_TYPE("FI");
@@ -1450,7 +1450,7 @@ public class OrderDetailController {
                  String TaxedAmt = "0.00";
                  SODet.setFORDERDET_AMT("-"+String.valueOf(amt));
                  SODet.setFORDERDET_ITEMCODE(tempOrder.getPREPRODUCT_ITEMCODE());
-                 SODet.setFORDERDET_PRILCODE("WSP001");
+                 SODet.setFORDERDET_PRILCODE("PR001");
                  SODet.setFORDERDET_QTY(qty);
                  SODet.setFORDERDET_REFNO(refno);
                  SODet.setFORDERDET_PRICE("0.00");
@@ -1505,7 +1505,7 @@ public class OrderDetailController {
                  String TaxedAmt = "0.00";
                  SODet.setFORDERDET_AMT("-"+String.valueOf(amt));
                  SODet.setFORDERDET_ITEMCODE(tempOrder.getPREPRODUCT_ITEMCODE());
-                 SODet.setFORDERDET_PRILCODE("WSP001");
+                 SODet.setFORDERDET_PRILCODE("PR001");
                  SODet.setFORDERDET_QTY(qty);
                  SODet.setFORDERDET_REFNO(refno);
                  SODet.setFORDERDET_PRICE("0.00");

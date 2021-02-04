@@ -43,7 +43,7 @@ public class StockInquiryAdaptor extends ArrayAdapter<StockInfo> {
         itemcode.setText(list.get(position).getStock_Itemcode());
         itemname.setText(list.get(position).getStock_Itemname());
         qty.setText(list.get(position).getStock_Qoh());
-        itemPrice = new ItemPriceController(context).getProductPriceByCode(list.get(position).getStock_Itemcode(), "WSP001");
+        itemPrice = new ItemPriceController(context).getProductPriceByCode(list.get(position).getStock_Itemcode(), "PR001");
         //itemPrice = new ItemPriceController(context).getProductPriceByCode(list.get(position).getStock_Itemcode(), list.get(position).getStock_Pril_Code());
         price.setText(itemPrice);
         return row;

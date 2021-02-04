@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmackCera.iml" filepath="$PROJECT_DIR$/SmackCera.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SmackCera.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SmackCera.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AS_SMACKCERA.iml" filepath="$PROJECT_DIR$/.idea/modules/AS_SMACKCERA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AS_SMACKCERA.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AS_SMACKCERA.app.iml" />
     </modules>
   </component>
 </project>

@@ -433,7 +433,7 @@ public class OrderDetailFragment extends Fragment {
                         ordDet.setFORDERDET_FREEQTY("0");
                         ordDet.setFORDERDET_ITEMCODE(itemFreeIssue.getItems().getFITEM_ITEM_CODE());
                         ordDet.setFORDERDET_PDISAMT("0");
-                        ordDet.setFORDERDET_PRILCODE("WSP001");
+                        ordDet.setFORDERDET_PRILCODE("PR001");
                         ordDet.setFORDERDET_QTY(itemFreeIssue.getAlloc());
                         ordDet.setFORDERDET_PICE_QTY(itemFreeIssue.getAlloc());
                         ordDet.setFORDERDET_CASES("0");//because free issue not issued cases wise-2019-10-21 menaka said
