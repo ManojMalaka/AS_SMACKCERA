@@ -137,7 +137,7 @@ public class SalRepController {
                 values.put(FSALREP_RECORD_ID, rep.getRECORDID());
                 values.put(FSALREP_SALES_FLAG, rep.getSALESFLAG());
 
-
+//Menaka
                 if (cursor.getCount() > 0) {
                     dB.update(TABLE_FSALREP, values, DatabaseHelper.REPCODE + "=?", new String[]{rep.getRepCode()});
                     Log.v("FSALREP : ", "Updated");
