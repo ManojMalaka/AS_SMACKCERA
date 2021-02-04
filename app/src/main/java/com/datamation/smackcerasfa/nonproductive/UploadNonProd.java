@@ -92,29 +92,6 @@ public class UploadNonProd extends AsyncTask<ArrayList<DayNPrdHed>, Integer, Arr
         String URL = "http://" + sp_url;
         Log.v("## Json ##", URL);
 
-//        for (DayNPrdHed c : RCSList) {
-//
-//            try {
-//                List<String> List = new ArrayList<String>();
-//                String sJsonHed = new Gson().toJson(c);
-//                List.add(sJsonHed);
-//
-//                Log.d("&", "doInBackground: "+networkFunctions.syncNonProductive());
-//                boolean bStatus = NetworkFunctions.mHttpManager(networkFunctions.syncNonProductive(),List.toString());
-//
-//                if (bStatus) {
-//                    c.setNONPRDHED_IS_SYNCED("1");
-//                } else {
-//                    c.setNONPRDHED_IS_SYNCED("0");
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            ++recordCount;
-//            publishProgress(recordCount);
-//        }
         try
         {
             for(final DayNPrdHed np: RCSList)

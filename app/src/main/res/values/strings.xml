@@ -18,7 +18,7 @@
     <string name="VanNumVal">SFAINVOICE</string>
     <string name="ExpenseNumVal">EXPENCE</string>
     <string name="newCusVal">NEWCUS</string>
-    <string name="nonprdVal">NONPRD</string>
+    <string name="nonprdVal">DAYNPSO</string>
     <string name="salRet">SFARTN</string>
     <string name="ReceiptNumVal">PDAREG</string>
     <string name="DispVal">DISPATCH</string>
