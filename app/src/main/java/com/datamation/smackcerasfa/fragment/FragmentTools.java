@@ -1081,7 +1081,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
             case UPLOAD_SALREP:{
                 AttendanceController attendanceController = new AttendanceController(getActivity());//4
                 ArrayList<Attendance> attendList = attendanceController.getUnsyncedTourData();
-                new UploadAttendance(getActivity(), FragmentTools.this,attendList, TaskType.UPLOAD_ATTENDANCE).execute(attendList);
+//                new UploadAttendance(getActivity(), FragmentTools.this,attendList, TaskType.UPLOAD_ATTENDANCE).execute(attendList);
                 Log.v(">>upload>>", "Upload attendance execute finish");
             }
             break;

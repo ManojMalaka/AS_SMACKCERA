@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +77,7 @@ public class ReceiptHeader extends Fragment {
         view = inflater.inflate(R.layout.sales_management_receipt_header, container, false);
         localSP = getActivity().getSharedPreferences(SETTINGS, 0);
         mSharedPref = new SharedPref(getActivity());
-        mainActivity = (ReceiptActivity)  getActivity();
+        mainActivity = (ReceiptActivity) getActivity();
         spnPayMode = (Spinner) view.findViewById(R.id.spnRecPayMode);
         //spnBank = (Spinner) view.findViewById(R.id.spnRecBank);
         spnBank1 = (SearchableSpinner) view.findViewById(R.id.spnRecBank);
@@ -149,7 +152,8 @@ public class ReceiptHeader extends Fragment {
         payModePos = mSharedPref.getGlobalVal("ReckeyPayModePos");
 
         if (!(payModePos.equalsIgnoreCase("-SELECT-")) && !(payModePos.equalsIgnoreCase("***")))
-            spnPayMode.setSelection(Integer.parseInt(payModePos));
+//            spnPayMode.setSelection(Integer.parseInt(payModePos));
+            spnPayMode.setSelection(spnPayMode.getSelectedItemPosition());
 
         currentDate();
         InvoiceNo.setText(RefNo);
@@ -246,13 +250,10 @@ public class ReceiptHeader extends Fragment {
             @Override
             public void onClick(View v) {
                 mSharedPref.setGlobalVal("isHeaderComplete", "1");
-                if (txtReceAmt.getText().toString().equals("") || txtReceAmt.getText().toString() == "")
-                {
+                if (txtReceAmt.getText().toString().equals("") || txtReceAmt.getText().toString() == "") {
                     Toast.makeText(getActivity(), "Received amount can't be empty", Toast.LENGTH_LONG).show();
                     txtReceAmt.requestFocus();
-                }
-                else
-                {
+                } else {
                     if ((Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > 0) && !spnPayMode.getSelectedItem().toString().equalsIgnoreCase("-SELECT-")) {
 //commented by rashmi -2019/05/06 because over payment allocated allow
 //                        if(Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > Double.parseDouble(outStandingAmt.getText().toString().replaceAll(",", "")))
@@ -263,8 +264,7 @@ public class ReceiptHeader extends Fragment {
 //                        else
 //                        {
 
-                        if (spnPayMode.getSelectedItemPosition() == 1)
-                        {
+                        if (spnPayMode.getSelectedItemPosition() == 1) {
                             if (Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > 0) {
 
                                 SaveReceiptHeader();
@@ -274,9 +274,7 @@ public class ReceiptHeader extends Fragment {
                                 Toast.makeText(getActivity(), "Please fill in Received amount", Toast.LENGTH_LONG).show();
                                 txtReceAmt.requestFocus();
                             }
-                        }
-                        else if (spnPayMode.getSelectedItemPosition() == 2)
-                        {
+                        } else if (spnPayMode.getSelectedItemPosition() == 2) {
                             if (txtCHQNO.getText().length() > 5 && !txtCHQDate.getText().equals("-SELECT DATE-") && Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > 0) {
                                 if (txtCHQNO.getText().length() < 5) {
                                     Toast.makeText(getActivity(), "Invalid Cheque No!", Toast.LENGTH_LONG).show();
@@ -292,9 +290,7 @@ public class ReceiptHeader extends Fragment {
                                 txtCHQNO.requestFocus();
                             }
 
-                        }
-                        else if (spnPayMode.getSelectedItemPosition() == 3)
-                        {
+                        } else if (spnPayMode.getSelectedItemPosition() == 3) {
                             if (txtCardNo.getText().length() > 4 && txtRecExpireDate.getText().length() > 4 && Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > 0) {
                                 if (txtCardNo.getText().length() < 2) {
                                     Toast.makeText(getActivity(), "Invalid Credit Card No!", Toast.LENGTH_LONG).show();
@@ -309,9 +305,7 @@ public class ReceiptHeader extends Fragment {
                                 txtCardNo.requestFocus();
                             }
 
-                        }
-                        else if (spnPayMode.getSelectedItemPosition() == 4)
-                        {
+                        } else if (spnPayMode.getSelectedItemPosition() == 4) {
                             if (txtSlipNo.getText().length() > 1 && Double.parseDouble(txtReceAmt.getText().toString().replaceAll(",", "")) > 0) {
                                 if (txtSlipNo.getText().length() < 2) {
                                     Toast.makeText(getActivity(), "Invalid Slip No!", Toast.LENGTH_LONG).show();
@@ -327,9 +321,7 @@ public class ReceiptHeader extends Fragment {
                                 txtCardNo.requestFocus();
                             }
 
-                        }
-                        else
-                        {
+                        } else {
                             if (txtDraftNo.getText().length() < 2) {
                                 Toast.makeText(getActivity(), "Invalid Draft No!", Toast.LENGTH_LONG).show();
                                 txtDraftNo.requestFocus();
@@ -414,8 +406,8 @@ public class ReceiptHeader extends Fragment {
                     public void okClicked(double value) {
 
                         activity.ReceivedAmt = value;
-                        txtReceAmt.setText(""+activity.ReceivedAmt);
-                        mSharedPref.setGlobalVal("ReckeyRecAmt",""+value)  ;
+                        txtReceAmt.setText("" + activity.ReceivedAmt);
+                        mSharedPref.setGlobalVal("ReckeyRecAmt", "" + value);
                         SaveReceiptHeader();
 
                     }
@@ -583,15 +575,12 @@ public class ReceiptHeader extends Fragment {
         }
 
         activity.selectedRecHed = recHed;
-        if(txtReceAmt.getText().toString().contains(","))
-        {
+        if (txtReceAmt.getText().toString().contains(",")) {
             activity.ReceivedAmt = Double.parseDouble(txtReceAmt.getText().toString().replace(",", ""));
-            mSharedPref.setGlobalVal("ReckeyRecAmt",txtReceAmt.getText().toString().replace(",", ""));
-        }
-        else
-        {
+            mSharedPref.setGlobalVal("ReckeyRecAmt", txtReceAmt.getText().toString().replace(",", ""));
+        } else {
             activity.ReceivedAmt = Double.parseDouble(txtReceAmt.getText().toString());
-            mSharedPref.setGlobalVal("ReckeyRecAmt",txtReceAmt.getText().toString().replace(",", ""));
+            mSharedPref.setGlobalVal("ReckeyRecAmt", txtReceAmt.getText().toString().replace(",", ""));
             activity.selectedRecHed = recHed;
         }
         SharedPref.getInstance(getActivity()).setGlobalVal("Rec_Start_Time", currentTime());
@@ -744,7 +733,7 @@ public class ReceiptHeader extends Fragment {
         if (!(payModePos.equalsIgnoreCase("-SELECT-")))
             spnPayMode.setSelection(Integer.parseInt(payModePos));
 
-        Log.d("Customer",mSharedPref.getSelectedDebName());
+        Log.d("Customer", mSharedPref.getSelectedDebName());
 
         // }
 

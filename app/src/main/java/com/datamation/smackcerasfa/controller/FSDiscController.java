@@ -10,6 +10,7 @@ import android.util.Log;
 import com.datamation.smackcerasfa.helpers.DatabaseHelper;
 import com.datamation.smackcerasfa.model.Bank;
 import com.datamation.smackcerasfa.model.FSDisc;
+import com.datamation.smackcerasfa.model.OrderDisc;
 
 import java.util.ArrayList;
 
@@ -90,6 +91,7 @@ public class FSDiscController {
         return count;
 
     }
+
 
 	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 

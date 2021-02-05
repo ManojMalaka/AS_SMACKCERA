@@ -31,7 +31,6 @@ public class OrderDiscController {
     public static final String FORDDISC_DISPER = "DisPer";
 
 
-
     public OrderDiscController(Context context) {
         this.context = context;
         dbHelper = new DatabaseHelper(context);
@@ -40,6 +39,7 @@ public class OrderDiscController {
     public void open() throws SQLException {
         dB = dbHelper.getWritableDatabase();
     }
+
     public static final String CREATE_FORDDISC_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_FORDDISC + " (" + DatabaseHelper.REFNO + " TEXT, " + DatabaseHelper.TXNDATE + " TEXT, " + FORDDISC_REFNO1 + " TEXT, " + FORDDISC_ITEMCODE + " TEXT, " + FORDDISC_DISAMT + " TEXT, " + FORDDISC_DISPER + " TEXT ); ";
 
     @SuppressWarnings("static-access")
@@ -95,11 +95,11 @@ public class OrderDiscController {
 
     }
 
-	/*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*--*-Update order discount table-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+    /*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*--*-Update order discount table-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
     public void UpdateOrderDiscount(OrderDisc orderDisc, String DiscRef, String DiscPer) {
 
-		/* Remove record using order discount ref no & item code */
+        /* Remove record using order discount ref no & item code */
         RemoveOrderDiscRecord(orderDisc.getRefNo(), orderDisc.getItemCode());
 
         if (dB == null) {
@@ -129,7 +129,39 @@ public class OrderDiscController {
 
     }
 
-	/*-*-*-*-*-*-*-*-*Check record availability using RefNo and Itemcode in FORDDISC*-*-*-*-*-*-*-*-*-*-*-*/
+    /*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*--*-Update order discount table-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+    public void insertOrderDiscount(ArrayList<OrderDisc> orderDiscList) {
+
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        try {
+            for (OrderDisc orderDisc : orderDiscList){
+                ContentValues values = new ContentValues();
+
+                values.put(DatabaseHelper.REFNO, orderDisc.getRefNo());
+                values.put(DatabaseHelper.TXNDATE, orderDisc.getTxnDate());
+                values.put(FORDDISC_ITEMCODE, orderDisc.getItemCode());
+                values.put(FORDDISC_DISAMT, orderDisc.getDisAmt());
+                values.put(FORDDISC_DISPER, orderDisc.getDisPer());
+                dB.insert(TABLE_FORDDISC, null, values);
+            }
+
+
+        } catch (Exception e) {
+            Log.v(TAG + " Exception", e.toString());
+        } finally {
+
+            dB.close();
+        }
+
+    }
+
+    /*-*-*-*-*-*-*-*-*Check record availability using RefNo and Itemcode in FORDDISC*-*-*-*-*-*-*-*-*-*-*-*/
 
     public boolean isRecordAvailable(String RefNo, String ItemCode) {
 
@@ -167,7 +199,7 @@ public class OrderDiscController {
         return Result;
     }
 
-	/*-*-*-*-*-*-*-*- Remove particular record from Order Discount table -*-*-* *-*-*-*-*-*/
+    /*-*-*-*-*-*-*-*- Remove particular record from Order Discount table -*-*-* *-*-*-*-*-*/
 
     public void RemoveOrderDiscRecord(String RefNo, String ItemCode) {
 
@@ -228,9 +260,9 @@ public class OrderDiscController {
 
     }
 
-	
 
-	/* Delete all records */
+
+    /* Delete all records */
 
     public int deleteAll() {
 
@@ -265,7 +297,7 @@ public class OrderDiscController {
 
     }
 
-	/*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**--*--*-*-*-*-*-*-*-*-*-*-*-*-**/
+    /*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**--*--*-*-*-*-*-*-*-*-*-*-*-*-**/
 
     public ArrayList<OrderDisc> getAllOrderDiscs(String Refno) {
 

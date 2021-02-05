@@ -35,6 +35,7 @@ import com.datamation.smackcerasfa.R;
 import com.datamation.smackcerasfa.adapter.FreeIssueAdapter;
 import com.datamation.smackcerasfa.adapter.OrderDetailsAdapter;
 import com.datamation.smackcerasfa.adapter.OrderDetailsAdapterNew;
+import com.datamation.smackcerasfa.adapter.OrderDiscountAdapter;
 import com.datamation.smackcerasfa.adapter.OrderFreeItemAdapter;
 import com.datamation.smackcerasfa.adapter.PreOrderAdapter;
 import com.datamation.smackcerasfa.controller.FSDiscController;
@@ -83,7 +84,7 @@ public class OrderDetailFragment extends Fragment {
     int seqno = 0;
     ListView lv_order_det, lvFree;
     ArrayList<PreProduct> productList = null, selectedItemList = null;
-    ImageButton ibtProduct,ibtDiscount;
+    ImageButton ibtProduct, ibtDiscount;
 
     LinearLayout reasonLayout;
     SweetAlertDialog pDialog;
@@ -262,16 +263,12 @@ public class OrderDetailFragment extends Fragment {
 
                         ArrayList<OrderDetail> dets = new OrderDetailController(getActivity()).getSAForFreeIssueCalc(referenceNum.getCurrentRefNo(getResources().getString(R.string.NumVal)));
 
-//                        // new
-//                         new OrderDetailController(getActivity()).restFreeIssueData(referenceNum.getCurrentRefNo(getResources().getString(R.string.NumVal)));
-
-                        fatchData();
 
                         ArrayList<OrderDisc> disItemDetails = getDiscountsBySalesItem(dets);// calc
                         // class
                         discountDialogBox(disItemDetails);
 
-                        fatchData();
+                        fatchData(disItemDetails);
                         clickCount++;
                     } catch (Exception e) {
                         Log.v("Exception", e.toString());
@@ -343,10 +340,22 @@ public class OrderDetailFragment extends Fragment {
             lvFree.clearTextFilter();
             OrderDetailController detDS = new OrderDetailController(getActivity());
             orderList = detDS.getAllOrderDetails(RefNo);
-            lvFree.setAdapter(new OrderDetailsAdapter(getActivity(), orderList,mSharedPref.getSelectedDebCode()));//            MainActivity activity = (MainActivity) getActivity();
+            lvFree.setAdapter(new OrderDetailsAdapter(getActivity(), orderList, mSharedPref.getSelectedDebCode()));//            MainActivity activity = (MainActivity) getActivity();
 
         } catch (NullPointerException e) {
             Log.v("SA Error", e.toString());
+        }
+    }
+
+    public void fatchData(ArrayList<OrderDisc> disitemDetails) {
+        try {
+
+            lvFree.clearTextFilter();
+            lvFree.setAdapter(new OrderDiscountAdapter(getActivity(), disitemDetails, mSharedPref.getSelectedDebCode()));//            MainActivity activity = (MainActivity) getActivity();
+
+
+        } catch (NullPointerException e) {
+            Log.v("SA Discount Error", e.toString());
         }
     }
 
@@ -364,10 +373,10 @@ public class OrderDetailFragment extends Fragment {
         }
 
         disupd.restData();
-        disupd.createOrUpdateOrdDisc(disitemDetails);
+        disupd.insertOrderDiscount(disitemDetails);
         new OrderDetailController(getActivity()).UpdateOrdDis(disitemDetails);
 
-        Toast.makeText(getContext(),"Calculated Discount "+totdisamt, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Calculated Discount " + totdisamt, Toast.LENGTH_SHORT).show();
 
         ibtDiscount.setClickable(true);
 
@@ -957,9 +966,9 @@ public class OrderDetailFragment extends Fragment {
             String GroupCode = new ItemController(getContext()).getItemGroupByCode(det.getFORDERDET_ITEMCODE());
 
             String Priority1 = dissch.getPriority1Discount(DisItemCode, CustomerCode, ""); // Added Group Code
-            String Priority2 = dissch.getPriority1Discount("", GroupCode, CustomerCode); // Added ItemCode
+            String Priority2 = dissch.getPriority1Discount("", CustomerCode, GroupCode); // Added ItemCode
             String Priority3 = dissch.getPriority1Discount(DisItemCode, "", ""); // Added Group Code and Customer Code
-            String Priority4 = dissch.getPriority1Discount("", GroupCode, ""); // Added ItemCode and Customer Code
+            String Priority4 = dissch.getPriority1Discount("", "", GroupCode); // Added ItemCode and Customer Code
 
             //BigDecimal DisPer ;
             BigDecimal ItemValue = new BigDecimal(det.getFORDERDET_AMT());
@@ -996,7 +1005,7 @@ public class OrderDetailFragment extends Fragment {
 
                 discountList.add(DisItmDet);
 
-            } else if (Prt3_DisPer.compareTo(zero_Disper) > 0){
+            } else if (Prt3_DisPer.compareTo(zero_Disper) > 0) {
                 String DisAmount = "";
                 OrderDisc DisItmDet = new OrderDisc();
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt3_DisPer)).doubleValue());
@@ -1008,7 +1017,7 @@ public class OrderDetailFragment extends Fragment {
 
                 discountList.add(DisItmDet);
 
-            } else if (Prt4_DisPer.compareTo(zero_Disper) > 0){
+            } else if (Prt4_DisPer.compareTo(zero_Disper) > 0) {
                 String DisAmount = "";
                 OrderDisc DisItmDet = new OrderDisc();
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt4_DisPer)).doubleValue());

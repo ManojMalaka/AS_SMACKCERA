@@ -108,7 +108,7 @@
                     android:layout_marginRight="1dip"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Free Items"
+                    android:text="Discount Items"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
@@ -145,7 +145,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/custom_label"
                     android:gravity="center"
-                    android:text="QTY"
+                    android:text="AMOUNT"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/unselected"
                     android:textSize="14sp" />

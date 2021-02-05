@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/***@Auther - Manoj**/
+/* *************** ** New Moodifications by MMS 2021/01 ** ************************** */
 public class UploadAttendance extends AsyncTask<ArrayList<Attendance>, Integer, ArrayList<Attendance>> {
 
     Context context;
@@ -101,7 +103,7 @@ public class UploadAttendance extends AsyncTask<ArrayList<Attendance>, Integer, 
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
                             int status = response.code();
-                            int reslength = response.body().toString().trim().length();
+//                            int reslength = response.body().toString().trim().length();
                             String resmsg = ""+response.body().toString();
                             if (status == 200 && !resmsg.equals("") && !resmsg.equals(null))
                             {

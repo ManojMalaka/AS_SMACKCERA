@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.datamation.smackcerasfa.R;
 import com.datamation.smackcerasfa.adapter.OrderDetailsAdapter;
+import com.datamation.smackcerasfa.adapter.OrderDiscountAdapter;
 import com.datamation.smackcerasfa.adapter.OrderFreeIssueDetailAdapter;
 import com.datamation.smackcerasfa.adapter.OrderReturnItemAdapter;
 import com.datamation.smackcerasfa.controller.CustomerController;
+import com.datamation.smackcerasfa.controller.FSDiscController;
 import com.datamation.smackcerasfa.controller.ItemLocController;
 import com.datamation.smackcerasfa.controller.OrderController;
 import com.datamation.smackcerasfa.controller.OrderDetailController;
@@ -72,12 +75,12 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public class OrderSummaryFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-        , com.google.android.gms.location.LocationListener{
+        , com.google.android.gms.location.LocationListener {
 
     public static final String SETTINGS = "PreSalesSummary";
     public static SharedPreferences localSP;
     View view;
-    TextView lblGross, lblReturnQty, lblReturn, lblNetVal, lblReplacements, lblQty,lblSummaryHeader;
+    TextView lblGross, lblReturnQty, lblReturn, lblNetVal, lblReplacements, lblQty, lblSummaryHeader;
     SharedPref mSharedPref;
     String RefNo = null, customerName = "";
     ArrayList<OrderDetail> list;
@@ -132,7 +135,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
         mactivity = getActivity();
         customerName = new CustomerController(getActivity()).getCusNameByCode(SharedPref.getInstance(getActivity()).getSelectedDebCode());
 
-        lblSummaryHeader.setText("ORDER SUMMARY - ("+customerName+")");
+        lblSummaryHeader.setText("ORDER SUMMARY - (" + customerName + ")");
 
         permissions.add(ACCESS_FINE_LOCATION);
         permissions.add(ACCESS_COARSE_LOCATION);
@@ -277,7 +280,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
         RefNo = new ReferenceNum(getActivity()).getCurrentRefNo(getResources().getString(R.string.NumVal));
         customerName = new CustomerController(getActivity()).getCusNameByCode(SharedPref.getInstance(getActivity()).getSelectedDebCode());
 
-        lblSummaryHeader.setText("ORDER SUMMARY - ("+customerName+")");
+        lblSummaryHeader.setText("ORDER SUMMARY - (" + customerName + ")");
 
         String orRefNo = new OrderController(getActivity()).getActiveRefNoFromOrders();
 
@@ -289,6 +292,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
 
         list = new OrderDetailController(getActivity()).getAllOrderDetails(RefNo);
         discList = new OrderDiscController(getActivity()).getAllOrderDiscs(RefNo);
+
 
         for (OrderDetail ordDet : list) {
             if (ordDet.getFORDERDET_TYPE().equals("SA"))
@@ -341,8 +345,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
         lblNetVal.setText(String.format("%.2f", net)); // total - discount - return
 
         lblReturnQty.setText(String.valueOf(returnQty));
-        lblReplacements.setText(String.format("%.2f" , fTotSchDisc));
-
+        lblReplacements.setText(String.format("%.2f", fTotSchDisc));
 
 
     }
@@ -361,40 +364,39 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
             final ListView lvProducts_Invoice = (ListView) promptView.findViewById(R.id.lvProducts_Summary_Dialog_Inv);
             ViewGroup.LayoutParams invItmparams = lvProducts_Invoice.getLayoutParams();
             ArrayList<OrderDetail> orderItemList = null;
-            orderItemList = new OrderDetailController(getActivity()).getAllItemsAddedInCurrentSale(RefNo, "SA","");
-            if(orderItemList.size()>0){
+            orderItemList = new OrderDetailController(getActivity()).getAllItemsAddedInCurrentSale(RefNo, "SA", "");
+            if (orderItemList.size() > 0) {
                 invItmparams.height = 200;
-            }else {
+            } else {
                 invItmparams.height = 0;
             }
             lvProducts_Invoice.setLayoutParams(invItmparams);
 
             lvProducts_Invoice.setAdapter(new OrderDetailsAdapter(getActivity(), orderItemList, mSharedPref.getSelectedDebCode()));
 
-            //MMS - freeissues
-            ListView lvProducts_freeIssue = (ListView) promptView.findViewById(R.id.lvProducts_Summary_freeIssue);
-            ViewGroup.LayoutParams params = lvProducts_freeIssue.getLayoutParams();
-            ArrayList<OrderDetail> orderFreeIssueItemList = null;
-            orderFreeIssueItemList = new OrderDetailController(getActivity()).getAllItemsAddedInCurrentSale(RefNo, "FI","FD");
-            if(orderFreeIssueItemList.size()>0){
+            //MMS - Discount 2021/02/05
+            ListView lvProducts_Discount = (ListView) promptView.findViewById(R.id.lvProducts_Summary_freeIssue);
+            ViewGroup.LayoutParams params = lvProducts_Discount.getLayoutParams();
+
+            if (discList.size() > 0) {
                 params.height = 200;
-            }else {
+            } else {
                 params.height = 0;
             }
 
-            lvProducts_freeIssue.setLayoutParams(params);
-            lvProducts_freeIssue.setAdapter(new OrderFreeIssueDetailAdapter(getActivity(), orderFreeIssueItemList, mSharedPref.getSelectedDebCode()));
+            lvProducts_Discount.setLayoutParams(params);
+            lvProducts_Discount.setAdapter(new OrderDiscountAdapter(getActivity(), discList, mSharedPref.getSelectedDebCode()));
 
             //MMS - return item
             ListView lvProducts_return = (ListView) promptView.findViewById(R.id.lvProducts_Summary_Dialog_Ret);
             ViewGroup.LayoutParams retItmparams = lvProducts_return.getLayoutParams();
 
             ArrayList<OrderDetail> orderReturnItemList = null;
-            orderReturnItemList = new OrderDetailController(getActivity()).getAllItemsAddedInCurrentSale(RefNo, "UR","MR");
-            Log.d("**re", "saveSummaryDialog: "+orderReturnItemList.toString());
-            if(orderReturnItemList.size()>0){
+            orderReturnItemList = new OrderDetailController(getActivity()).getAllItemsAddedInCurrentSale(RefNo, "UR", "MR");
+            Log.d("**re", "saveSummaryDialog: " + orderReturnItemList.toString());
+            if (orderReturnItemList.size() > 0) {
                 retItmparams.height = 200;
-            }else {
+            } else {
                 retItmparams.height = 0;
             }
             lvProducts_return.setLayoutParams(retItmparams);
@@ -543,6 +545,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
             mRefreshData();
         }
     }
+
     /*******************************************************************/
     @Override
     public void onAttach(Activity activity) {
@@ -554,6 +557,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
             throw new ClassCastException(activity.toString() + " must implement onButtonPressed");
         }
     }
+
     public void popupFeedBack(final Context context) {
         final Dialog repDialog = new Dialog(context);
         repDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -567,59 +571,59 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
         final ImageView happy = (ImageView) repDialog.findViewById(R.id.emoji_happy);
         final ImageView sad = (ImageView) repDialog.findViewById(R.id.emoji_bad);
         final ImageView normal = (ImageView) repDialog.findViewById(R.id.emoji_neutral);
-       // final ImageView angry = (ImageView) repDialog.findViewById(R.id.emoji_angry);
+        // final ImageView angry = (ImageView) repDialog.findViewById(R.id.emoji_angry);
 
-        final TextView happylbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_happy) ;
-        final TextView sadlbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_sad) ;
-        final TextView neutrallbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_normal) ;
-       // final TextView angrylbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_angry) ;
+        final TextView happylbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_happy);
+        final TextView sadlbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_sad);
+        final TextView neutrallbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_normal);
+        // final TextView angrylbl = (TextView) repDialog.findViewById(R.id.lbl_emoji_angry) ;
 
         repDialog.findViewById(R.id.emoji_happy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("<<<<HAPPY>>","<<HAPPY");
-                new OrderController(context).updateFeedback("1",RefNo);
-                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.smile));
-                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.sad_bw));
+                Log.d("<<<<HAPPY>>", "<<HAPPY");
+                new OrderController(context).updateFeedback("1", RefNo);
+                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.smile));
+                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.sad_bw));
                 normal.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.confused_bw));
-               // angry.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.angry_bw));
+                // angry.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.angry_bw));
 
                 happylbl.setTextColor(getActivity().getResources().getColor(R.color.achievecolor));
                 sadlbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
                 neutrallbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
-               // angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
+                // angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
             }
         });
         repDialog.findViewById(R.id.emoji_bad).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("<<<<SAD>>","<<SAD");
-                new OrderController(context).updateFeedback("2",RefNo);
-                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.happiness_bw));
-                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.sad));
+                Log.d("<<<<SAD>>", "<<SAD");
+                new OrderController(context).updateFeedback("2", RefNo);
+                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.happiness_bw));
+                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.sad));
                 normal.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.confused_bw));
                 //angry.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.angry_bw));
 
                 happylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
                 sadlbl.setTextColor(getActivity().getResources().getColor(R.color.achievecolor));
                 neutrallbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
-               // angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
+                // angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
             }
         });
         repDialog.findViewById(R.id.emoji_neutral).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("<<<<NORMAL>>", "<<NORMAL");
-                new OrderController(context).updateFeedback("3",RefNo);
-                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.happiness_bw));
-                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.sad_bw));
+                new OrderController(context).updateFeedback("3", RefNo);
+                happy.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.happiness_bw));
+                sad.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.sad_bw));
                 normal.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.confused));
-            //    angry.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.angry_bw));
+                //    angry.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.angry_bw));
 
                 happylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
                 sadlbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
                 neutrallbl.setTextColor(getActivity().getResources().getColor(R.color.achievecolor));
-              //  angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
+                //  angrylbl.setTextColor(getActivity().getResources().getColor(R.color.half_black));
             }
         });
 
@@ -644,9 +648,9 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
             @Override
             public void onClick(View view) {
 
-                    saveSummaryDialog();
+                saveSummaryDialog();
 
-                    repDialog.dismiss();
+                repDialog.dismiss();
 
             }
         });
@@ -693,7 +697,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
         }
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if(mLocation!=null) {
+        if (mLocation != null) {
             mSharedPref.setGlobalVal("Longitude", String.valueOf(mLocation.getLongitude()));
             mSharedPref.setGlobalVal("Latitude", String.valueOf(mLocation.getLatitude()));
         }
@@ -715,7 +719,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
 
-        if(location!=null) {
+        if (location != null) {
             mSharedPref.setGlobalVal("Longitude", String.valueOf(location.getLongitude()));
             mSharedPref.setGlobalVal("Latitude", String.valueOf(location.getLatitude()));
         }
@@ -755,7 +759,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
     private boolean hasPermission(String permission) {
         if (canMakeSmores()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return (getContext().checkSelfPermission(permission)  == PackageManager.PERMISSION_GRANTED);
+                return (getContext().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
             }
         }
         return true;
@@ -820,8 +824,7 @@ public class OrderSummaryFragment extends Fragment implements GoogleApiClient.Co
     }
 
 
-    public void stopLocationUpdates()
-    {
+    public void stopLocationUpdates() {
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi
                     .removeLocationUpdates(mGoogleApiClient, this);
