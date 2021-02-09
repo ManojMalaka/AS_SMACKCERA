@@ -378,6 +378,7 @@ public class FddbNote {
             fdDbNote.setFDDBNOTE_TOT_BAL1(instance.getString("TotBal1"));
             fdDbNote.setFDDBNOTE_TXN_DATE(instance.getString("TxnDate"));
             fdDbNote.setFDDBNOTE_TXN_TYPE(instance.getString("TxnType"));
+            fdDbNote.setFDDBNOTE_ENTER_AMT("0.00");
 
             return fdDbNote;
         }

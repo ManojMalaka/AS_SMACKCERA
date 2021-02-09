@@ -308,6 +308,7 @@ public class NetworkFunctions {
 //
 //        return getFromServer(baseURL + "fdebitempri"+restOfURL, params);
 //    }
+
     public String getBanks() throws IOException {
 
         List<CustomNameValuePair> params = new ArrayList<>();
@@ -745,7 +746,6 @@ public class NetworkFunctions {
         con.setRequestMethod("GET");
         con.setDoInput(true);
 //        con.setDoOutput(true);
-
         con.connect();
 
         int status = con.getResponseCode();
@@ -759,7 +759,6 @@ public class NetworkFunctions {
                     sb.append(line).append("\n");
                 }
                 br.close();
-
                 response = sb.toString();
                 Log.d(LOG_TAG, "Server Response : \n" + response);
         }

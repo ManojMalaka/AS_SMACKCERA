@@ -25,11 +25,13 @@ import android.widget.Toast;
 
 import com.datamation.smackcerasfa.R;
 import com.datamation.smackcerasfa.adapter.ReceiptAdapter;
+import com.datamation.smackcerasfa.controller.CustomerController;
 import com.datamation.smackcerasfa.controller.OutstandingController;
 import com.datamation.smackcerasfa.controller.ReceiptController;
 import com.datamation.smackcerasfa.controller.ReceiptDetController;
 import com.datamation.smackcerasfa.controller.SalRepController;
 import com.datamation.smackcerasfa.helpers.SharedPref;
+import com.datamation.smackcerasfa.model.Customer;
 import com.datamation.smackcerasfa.model.FddbNote;
 import com.datamation.smackcerasfa.model.ReceiptDet;
 import com.datamation.smackcerasfa.model.ReceiptHed;
@@ -53,6 +55,7 @@ public class ReceiptSummary extends Fragment {
     SharedPref mSharedPref;
     public static SharedPreferences localSP;
     public static final String SETTINGS = "SETTINGS";
+    private Customer outlet;
     String RefNo = null;
     ListView lv_fddbnote;
     ReceiptActivity activity;
@@ -83,6 +86,8 @@ public class ReceiptSummary extends Fragment {
         textBank = (TextView) view.findViewById(R.id.textBank);
         lv_fddbnote = (ListView) view.findViewById(R.id.lv_fddbnote);
         RefNo = new ReferenceNum(getActivity()).getCurrentRefNo(getResources().getString(R.string.ReceiptNumVal));
+
+        outlet= new CustomerController(getActivity()).getSelectedCustomerByCode(mSharedPref.getSelectedDebCode());
 
         fam.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +190,7 @@ public class ReceiptSummary extends Fragment {
                 activity.selectedRecHed = null;
                 Toast.makeText(getActivity(), "Receipt discarded successfully..!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(),DebtorDetailsActivity.class);
+                intent.putExtra("outlet", outlet);
                 startActivity(intent);
                 getActivity().finish();
                 //  UtilityContainer.ClearReceiptSharedPref(getActivity());
@@ -206,7 +212,9 @@ public class ReceiptSummary extends Fragment {
     public void mPauseReceipt() {
 //
         if (!mSharedPref.getSelectedDebCode().equals("0") && mSharedPref.getGlobalVal("ReckeyHeader").equals("1")){
+
             Intent intnt = new Intent(getActivity(), DebtorDetailsActivity.class);
+            intnt.putExtra("outlet", outlet);
             startActivity(intnt);
             getActivity().finish();
         }else
@@ -328,7 +336,9 @@ public class ReceiptSummary extends Fragment {
                 dialog.dismiss();
                 ClearSharedPref();/* Clear shared preference */
 
+
                 Intent intent = new Intent(getActivity(), DebtorDetailsActivity.class);
+                intent.putExtra("outlet", outlet);
                 startActivity(intent);
                 getActivity().finish();
 

@@ -111,6 +111,7 @@ public class ReceiptHeader extends Fragment {
 
         fb = (FloatingActionButton) view.findViewById(R.id.fab1);
 
+        mSharedPref.setReceiptHedClicked("0");
         RefNo = new ReferenceNum(getActivity()).getCurrentRefNo(getResources().getString(R.string.ReceiptNumVal));
         /*------------------------------------------*/
         List<String> payModeList = new ArrayList<String>();
@@ -269,6 +270,7 @@ public class ReceiptHeader extends Fragment {
 
                                 SaveReceiptHeader();
                                 mSharedPref.setGlobalVal("ReckeyHeader", "1");
+                                mSharedPref.setReceiptHedClicked("1");
                                 listener.moveToDetailsRece(1);
                             } else {
                                 Toast.makeText(getActivity(), "Please fill in Received amount", Toast.LENGTH_LONG).show();
@@ -282,6 +284,7 @@ public class ReceiptHeader extends Fragment {
                                 } else {
                                     SaveReceiptHeader();
                                     mSharedPref.setGlobalVal("ReckeyHeader", "1");
+                                    mSharedPref.setReceiptHedClicked("1");
                                     listener.moveToDetailsRece(1);
 
                                 }

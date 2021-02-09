@@ -355,6 +355,11 @@ public class ReceiptDetails extends Fragment implements OnClickListener {
     /*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
     public void mRefreshHeader(){
+        if (mSharedPref.getReceiptHedClicked().equals("0")) {
+            listener.moveBackToDetailsRece(0);
+            Toast.makeText(getActivity(), "Please tap on plus button", Toast.LENGTH_LONG).show();
+        }
+
         if(!mSharedPref.getGlobalVal("ReckeyRecAmt").equals("***"))
             ReceivedAmt = Double.parseDouble(mSharedPref.getGlobalVal("ReckeyRecAmt"));
         else

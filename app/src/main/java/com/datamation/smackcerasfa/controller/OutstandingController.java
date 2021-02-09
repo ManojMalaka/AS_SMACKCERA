@@ -105,7 +105,7 @@ public class OutstandingController {
                     "TotBal1," +
                     "OvPayAmt," +
                     "Remarks," +
-                    "AddUser,AddDate) " + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "AddUser,AddDate,EnterAmt) " + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             SQLiteStatement stmt = dB.compileStatement(sql);
 
@@ -131,13 +131,14 @@ public class OutstandingController {
                 stmt.bindString(17, fdDbNote.getFDDBNOTE_TOT_BAL());
                 stmt.bindString(18, fdDbNote.getFDDBNOTE_TOT_BAL1());
                 stmt.bindString(19, fdDbNote.getFDDBNOTE_OV_PAY_AMT());
-                stmt.bindString(20, fdDbNote.getFDDBNOTE_REMARKS());
+//                stmt.bindString(20, fdDbNote.getFDDBNOTE_REMARKS());
 //                stmt.bindString(21, fdDbNote.getFDDBNOTE_CR_ACC());
 //                stmt.bindString(22, fdDbNote.getFDDBNOTE_PRT_COPY());
 //                stmt.bindString(23, fdDbNote.getFDDBNOTE_GL_POST());
 //                stmt.bindString(24, fdDbNote.getFDDBNOTE_GL_BATCH());
                 stmt.bindString(21, fdDbNote.getFDDBNOTE_ADD_USER());
                 stmt.bindString(22, fdDbNote.getFDDBNOTE_ADD_DATE());
+                stmt.bindString(23, fdDbNote.getFDDBNOTE_ENTER_AMT());
 
 
                 stmt.execute();

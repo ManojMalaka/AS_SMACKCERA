@@ -312,6 +312,16 @@ public class SharedPref {
         editor.apply();
     }
 
+    public String getReceiptHedClicked() {
+        return sharedPref.getString("IS_RECEIPTHED_CLICKED", "0");
+    }
+
+    public void setReceiptHedClicked(String val) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("IS_RECEIPTHED_CLICKED", val);
+        editor.apply();
+    }
+
     public String getSelectedDebRouteCode() {
         return sharedPref.getString("selected_out_route_code", "0");
     }

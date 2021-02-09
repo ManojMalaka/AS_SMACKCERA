@@ -4,5 +4,7 @@ public interface ReceiptResponseListener {
 
     void moveToDetailsRece(int index);
 
+    void moveBackToDetailsRece(int index);
+
 
 }

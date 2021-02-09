@@ -139,6 +139,24 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptRespons
     }
 
     @Override
+    public void moveBackToDetailsRece(int index) {
+        if (index == 0)
+        {
+            viewPager.setCurrentItem(0);
+        }
+
+        if (index == 1)
+        {
+            viewPager.setCurrentItem(1);
+        }
+
+        if (index == 2)
+        {
+            viewPager.setCurrentItem(2);
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (status)
