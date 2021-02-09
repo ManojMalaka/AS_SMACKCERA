@@ -56,6 +56,7 @@ import com.datamation.smackcerasfa.controller.NewCustomerController;
 import com.datamation.smackcerasfa.controller.OrderController;
 import com.datamation.smackcerasfa.controller.OutstandingController;
 import com.datamation.smackcerasfa.controller.ReasonController;
+import com.datamation.smackcerasfa.controller.ReceiptController;
 import com.datamation.smackcerasfa.controller.ReceiptDetController;
 import com.datamation.smackcerasfa.controller.ReferenceDetailDownloader;
 import com.datamation.smackcerasfa.controller.ReferenceSettingController;
@@ -92,6 +93,7 @@ import com.datamation.smackcerasfa.model.NewCustomer;
 import com.datamation.smackcerasfa.model.Order;
 import com.datamation.smackcerasfa.model.PictureList;
 import com.datamation.smackcerasfa.model.Reason;
+import com.datamation.smackcerasfa.model.ReceiptHed;
 import com.datamation.smackcerasfa.model.Route;
 import com.datamation.smackcerasfa.model.RouteDet;
 import com.datamation.smackcerasfa.model.SalRep;
@@ -105,6 +107,7 @@ import com.datamation.smackcerasfa.model.apimodel.TaskType;
 import com.datamation.smackcerasfa.model.objPicture;
 import com.datamation.smackcerasfa.nonproductive.UploadNonProd;
 import com.datamation.smackcerasfa.presale.UploadPreSales;
+import com.datamation.smackcerasfa.receipt.UploadReceipt;
 import com.datamation.smackcerasfa.utils.NetworkUtil;
 import com.datamation.smackcerasfa.utils.UtilityContainer;
 import com.datamation.smackcerasfa.view.DayExpenseActivity;
@@ -1014,46 +1017,6 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         return allUpload;
     }
 
-//    private void getImgDataFromFirebase(DatabaseReference rootRef) {
-//        DatabaseReference chatSpaceRef = rootRef.child("Images");
-//        ValueEventListener eventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//
-//                    try
-//                    {
-//                        int flag = ds.child("FLAG").getValue(Integer.class);
-//                        String mType = ds.child("M_TYPE").getValue(String.class);
-//                        List<String> repCodeList = (List<String>) ds.child("REPCODE").getValue();
-//                        String url = ds.child("URL").getValue(String.class);
-//                        if(repCodeList.size()>0)
-//                            if (repCodeList.contains(pref.getLoginUser().getCode()) && (flag == 0)) {
-//                                fd = new FirebaseData();
-//                                fd.setMEDIA_FLAG(flag + "");
-//                                fd.setMEDIA_URL(url);
-//                                fd.setMEDIA_TYPE(mType);
-//                                imgList.add(fd);
-//                               // Log.d("*TAG", url + "," + flag + "," + repCodeList + "" + pref.getLoginUser().getCode() + " " + mType);
-//                            }
-//                    }
-//                    catch (Exception ex)
-//                    {
-//                        Toast.makeText(getActivity(),"Image Media Problem....",Toast.LENGTH_SHORT).show();
-//                    }
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d("*ERR", databaseError + "");
-//            }
-//        };
-//        chatSpaceRef.addListenerForSingleValueEvent(eventListener);
-////        return imgList;
-//    }
 
 
     @Override
@@ -1074,81 +1037,87 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
             case UPLOAD_NONPROD:{
                 SalRepController salRepController = new SalRepController(getActivity());
                 ArrayList<SalRep> saleRep = salRepController.getAllUnsyncSalrep(new SalRepController(getActivity()).getCurrentRepCode());
-                new UploadSalRef(getActivity(), FragmentTools.this,saleRep, TaskType.UPLOAD_SALREP).execute(saleRep);
+                new UploadSalRef(getActivity(), FragmentTools.this,saleRep, TaskType.UPLOAD_ATTENDANCE).execute(saleRep);
                 Log.v(">>upload>>", "Upload repemail execute finish");
             }
             break;
-            case UPLOAD_SALREP:{
-                AttendanceController attendanceController = new AttendanceController(getActivity());//4
-                ArrayList<Attendance> attendList = attendanceController.getUnsyncedTourData();
-//                new UploadAttendance(getActivity(), FragmentTools.this,attendList, TaskType.UPLOAD_ATTENDANCE).execute(attendList);
-                Log.v(">>upload>>", "Upload attendance execute finish");
-            }
-            break;
+//            case UPLOAD_SALREP:{
+//                AttendanceController attendanceController = new AttendanceController(getActivity());//4
+//                ArrayList<Attendance> attendList = attendanceController.getUnsyncedTourData();
+////                new UploadAttendance(getActivity(), FragmentTools.this,attendList, TaskType.UPLOAD_ATTENDANCE).execute(attendList);
+//                Log.v(">>upload>>", "Upload attendance execute finish");
+//            }
+//            break;
             case UPLOAD_ATTENDANCE:{
                 DayExpHedController exHed = new DayExpHedController(getActivity());
                 final ArrayList<DayExpHed> exHedList = exHed.getUnSyncedData();//8
                 if(exHedList.size()>0){
                     Toast.makeText(getActivity(), "Expense data upload completed..!", Toast.LENGTH_LONG).show();
                 }
-                new UploadExpenses(getActivity(), FragmentTools.this, TaskType.UPLOAD_EXPENSE).execute(exHedList);
+                new UploadExpenses(getActivity(), FragmentTools.this, TaskType.UPLOAD_RECEIPT).execute(exHedList);
                 Log.v(">>upload>>", "Upload expense execute finish");
             }
             break;
-            case UPLOAD_EXPENSE:{
-                CustomerController customerDS = new CustomerController(getActivity());
-                ArrayList<Debtor> debtorlist = customerDS.getAllDebtorsToCordinatesUpdate();//5
-                new UploadDebtorCordinates(getActivity(), FragmentTools.this,debtorlist, TaskType.UPLOAD_COORDINATES).execute(debtorlist);
-                Log.v(">>upload>>", "Upload DebtorCordinates execute finish");
+//            case UPLOAD_EXPENSE:{
+//                CustomerController customerDS = new CustomerController(getActivity());
+//                ArrayList<Debtor> debtorlist = customerDS.getAllDebtorsToCordinatesUpdate();//5
+//                new UploadDebtorCordinates(getActivity(), FragmentTools.this,debtorlist, TaskType.UPLOAD_RECEIPT).execute(debtorlist);
+//                Log.v(">>upload>>", "Upload DebtorCordinates execute finish");
+//            }
+//            break;
+//            case UPLOAD_COORDINATES:{
+//                CustomerController customerDS = new CustomerController(getActivity());
+//                ArrayList<Debtor> imgDebtorList = customerDS.getAllImagUpdatedDebtors();//7
+//                new UploadDebtorImges(getActivity(), FragmentTools.this, imgDebtorList,TaskType.UPLOAD_RECEIPT).execute();
+//                Log.v(">>upload>>", "Upload imgDebtor execute finish");
+//            }
+//            break;
+//            case UPLOAD_IMAGES:{
+//                NewCustomerController customerDS = new NewCustomerController(getActivity());
+//                ArrayList<NewCustomer> newCustomersList = customerDS.getAllNewCustomersForSync();
+//                new UploadNewCustomer(getActivity(), FragmentTools.this, newCustomersList,TaskType.UPLOAD_NEWCUS).execute();
+//                Log.v(">>upload>>", "Upload NewCustomer execute finish");
+//            }
+//            break;
+//            case UPLOAD_NEWCUS:{
+//                CustomerController customerDS = new CustomerController(getActivity());
+//                ArrayList<Debtor> updExistingDebtors = customerDS.getAllUpdatedDebtors();
+//                new UploadEditedDebtors(getActivity(), FragmentTools.this, updExistingDebtors,TaskType.UPLOAD_EDTCUS).execute();
+//                Log.v(">>upload>>", "Upload EditedDebtors execute finish");
+//            }
+//            break;
+//            case UPLOAD_EDTCUS:{
+//                ArrayList<SalRep> fblist = new ArrayList<>();
+//
+//                SalRep salRep = new SalRep();
+//                salRep.setCONSOLE_DB(SharedPref.getInstance(context).getConsoleDB().trim());
+//                salRep.setDIST_DB(SharedPref.getInstance(context).getDistDB().trim());
+//                salRep.setRepCode(SharedPref.getInstance(context).getLoginUser().getCode());
+//                salRep.setFirebaseTokenID(SharedPref.getInstance(context).getFirebaseTokenKey());
+//                fblist.add(salRep);
+//                new UploadFirebaseTokenKey(getActivity(), FragmentTools.this, fblist,TaskType.UPLOAD_TKN).execute();
+//                Log.v(">>upload>>", "Upload FirebaseToken execute finish");
+//
+//            }
+//            break;
+//            case UPLOAD_TKN:{
+//                Log.v(">>upload>>", "all upload finish");
+//
+//               // resultList.addAll(list);
+//                String msg = "";
+//                for (String s : resultList) {
+//                    msg += s;
+//                }
+//                resultList.clear();
+//                mUploadResult(msg);
+//            }
+//            break;
+            case UPLOAD_RECEIPT:{
+                ReceiptController rece = new ReceiptController(getActivity());
+                ArrayList<ReceiptHed> collectedOutstanding = rece.getAllCompletedRecHedS("");
+                new UploadReceipt(getActivity(),FragmentTools.this,collectedOutstanding).execute();
+                Log.v(">>upload>>", "Upload Receipt execute finish");
             }
-            break;
-            case UPLOAD_COORDINATES:{
-                CustomerController customerDS = new CustomerController(getActivity());
-                ArrayList<Debtor> imgDebtorList = customerDS.getAllImagUpdatedDebtors();//7
-                new UploadDebtorImges(getActivity(), FragmentTools.this, imgDebtorList,TaskType.UPLOAD_IMAGES).execute();
-                Log.v(">>upload>>", "Upload imgDebtor execute finish");
-            }
-            break;
-            case UPLOAD_IMAGES:{
-                NewCustomerController customerDS = new NewCustomerController(getActivity());
-                ArrayList<NewCustomer> newCustomersList = customerDS.getAllNewCustomersForSync();
-                new UploadNewCustomer(getActivity(), FragmentTools.this, newCustomersList,TaskType.UPLOAD_NEWCUS).execute();
-                Log.v(">>upload>>", "Upload NewCustomer execute finish");
-            }
-            break;
-            case UPLOAD_NEWCUS:{
-                CustomerController customerDS = new CustomerController(getActivity());
-                ArrayList<Debtor> updExistingDebtors = customerDS.getAllUpdatedDebtors();
-                new UploadEditedDebtors(getActivity(), FragmentTools.this, updExistingDebtors,TaskType.UPLOAD_EDTCUS).execute();
-                Log.v(">>upload>>", "Upload EditedDebtors execute finish");
-            }
-            break;
-            case UPLOAD_EDTCUS:{
-                ArrayList<SalRep> fblist = new ArrayList<>();
-
-                SalRep salRep = new SalRep();
-                salRep.setCONSOLE_DB(SharedPref.getInstance(context).getConsoleDB().trim());
-                salRep.setDIST_DB(SharedPref.getInstance(context).getDistDB().trim());
-                salRep.setRepCode(SharedPref.getInstance(context).getLoginUser().getCode());
-                salRep.setFirebaseTokenID(SharedPref.getInstance(context).getFirebaseTokenKey());
-                fblist.add(salRep);
-                new UploadFirebaseTokenKey(getActivity(), FragmentTools.this, fblist,TaskType.UPLOAD_TKN).execute();
-                Log.v(">>upload>>", "Upload FirebaseToken execute finish");
-
-            }
-            break;
-            case UPLOAD_TKN:{
-                Log.v(">>upload>>", "all upload finish");
-
-               // resultList.addAll(list);
-                String msg = "";
-                for (String s : resultList) {
-                    msg += s;
-                }
-                resultList.clear();
-                mUploadResult(msg);
-            }
-            break;
             default:
                 break;
         }

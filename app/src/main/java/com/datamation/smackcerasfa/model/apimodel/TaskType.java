@@ -12,7 +12,9 @@ public enum TaskType
     UPLOAD_IMAGES(7),
     UPLOAD_NEWCUS(8),
     UPLOAD_EDTCUS(9),
-    UPLOAD_TKN(10);
+    UPLOAD_TKN(10),
+    UPLOAD_RECEIPT(11);
+
     int value;
 
     private TaskType(int value) {

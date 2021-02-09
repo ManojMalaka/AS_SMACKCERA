@@ -10,7 +10,9 @@ import com.datamation.smackcerasfa.R;
 import com.datamation.smackcerasfa.controller.ReceiptController;
 import com.datamation.smackcerasfa.helpers.NetworkFunctions;
 import com.datamation.smackcerasfa.helpers.UploadTaskListener;
+import com.datamation.smackcerasfa.model.Debtor;
 import com.datamation.smackcerasfa.model.ReceiptHed;
+import com.datamation.smackcerasfa.model.SalRep;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -23,15 +25,17 @@ public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, Arr
 	UploadTaskListener taskListener;
 	NetworkFunctions networkFunctions;
 	int totalRecords;
+	ArrayList<ReceiptHed> fReciptList =  new ArrayList<>();
 
 	public static final String SETTINGS = "SETTINGS";
 	public static SharedPreferences localSP;
 
-	public UploadReceipt(Context context, UploadTaskListener taskListener) {
+	public UploadReceipt(Context context, UploadTaskListener taskListener,ArrayList<ReceiptHed> recList) {
 
 		this.context = context;
 		this.taskListener = taskListener;
 		localSP = context.getSharedPreferences(SETTINGS, 0);
+		fReciptList.addAll(recList);
 	}
 
 	@Override
@@ -47,7 +51,7 @@ public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, Arr
 		int recordCount = 0;
 		publishProgress(recordCount);
 		
-		ArrayList<ReceiptHed> RCSList = params[0];
+		ArrayList<ReceiptHed> RCSList = fReciptList;
 		totalRecords = RCSList.size();
 		networkFunctions = new NetworkFunctions(context);
 		final String sp_url =localSP.getString("URL", "").toString();
