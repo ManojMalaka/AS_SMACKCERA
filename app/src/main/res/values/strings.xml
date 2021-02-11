@@ -20,7 +20,7 @@
     <string name="newCusVal">NEWCUS</string>
     <string name="nonprdVal">DAYNPSO</string>
     <string name="salRet">SFARTN</string>
-    <string name="ReceiptNumVal">PDAREG</string>
+    <string name="ReceiptNumVal">PDARC</string>
     <string name="DispVal">DISPATCH</string>
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
