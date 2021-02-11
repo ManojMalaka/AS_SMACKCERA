@@ -36,11 +36,10 @@ public class OrderAdapter extends ArrayAdapter<Order> {
 
         row = inflater.inflate(R.layout.row_cus_view, parent, false);
 
-        TextView Itemname = (TextView) row.findViewById(R.id.row_refno);
-        TextView Itemcode = (TextView) row.findViewById(R.id.row_cus_name);
-        TextView syncStatus = (TextView) row.findViewById(R.id.addeddate);
-       // ImageView imageViewCus = (ImageView) row.findViewById(R.id.imageViewCus);
-        LinearLayout sts = (LinearLayout)row.findViewById(R.id.sts);
+        TextView refNoTxt = (TextView) row.findViewById(R.id.row_refno);
+        TextView cusCodeTxt = (TextView) row.findViewById(R.id.row_cus_name);
+        TextView addDateTxt = (TextView) row.findViewById(R.id.addeddate);
+        TextView amountTxt = (TextView) row.findViewById(R.id.addeddate);
 
 
     //    list = new OrderController(context).getAllOrders();
@@ -51,9 +50,13 @@ public class OrderAdapter extends ArrayAdapter<Order> {
 //           sts.setBackgroundResource(R.drawable.status_line);//not synced
 //       }
 //
-//        Itemcode.setText(""+new CustomerController(context).getSelectedCustomerByCode(list.get(position).getORDHED_CUS_CODE()).getCusName());
-//        Itemname.setText(list.get(position).getORDHED_REFNO());
-//        syncStatus.setText(list.get(position).getORDHED_TXN_DATE());
+        for(Order ord : list){
+            refNoTxt.setText(ord.getORDER_REFNO());
+            cusCodeTxt.setText(ord.getORDER_DEBNAME());
+            addDateTxt.setText(ord.getORDER_ADDDATE());
+            amountTxt.setText(ord.getORDER_TOTALAMT());
+
+        }
 
         return row;
     }

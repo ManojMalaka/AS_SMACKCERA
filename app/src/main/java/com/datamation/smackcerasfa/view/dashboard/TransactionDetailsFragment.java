@@ -9,6 +9,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
@@ -17,17 +19,24 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.datamation.smackcerasfa.R;
+import com.datamation.smackcerasfa.controller.CustomerController;
 import com.datamation.smackcerasfa.controller.OrderController;
 import com.datamation.smackcerasfa.controller.OrderDetailController;
 import com.datamation.smackcerasfa.controller.PreProductController;
+import com.datamation.smackcerasfa.controller.ReceiptController;
+import com.datamation.smackcerasfa.model.Customer;
 import com.datamation.smackcerasfa.model.Order;
 import com.datamation.smackcerasfa.model.OrderDetail;
+import com.datamation.smackcerasfa.model.ReceiptDet;
+import com.datamation.smackcerasfa.model.ReceiptHed;
 import com.datamation.smackcerasfa.utils.UtilityContainer;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/***@Auther - Manoj**/
+/* *************** ** New Moodifications by MMS 2021/02 ** ************************** */
 public class TransactionDetailsFragment extends Fragment {
 
     private View view;
@@ -38,8 +47,12 @@ public class TransactionDetailsFragment extends Fragment {
     private Spinner spnTrans;
 
     ExpandablePreListAdapter listPreAdapter;
+    ExpandableReceiptListAdapter listRecAdapter;
     List<Order> listPreDataHeader;
     HashMap<Order, List<OrderDetail>> listPreDataChild;
+
+    List<ReceiptHed> listReceiptHed;
+    HashMap<ReceiptHed,List<ReceiptDet>> listReceiptDet;
 //
 //
 //    ExpandableVanListAdapter listVanAdapter;
@@ -63,14 +76,14 @@ public class TransactionDetailsFragment extends Fragment {
 
         spnTrans = (Spinner)view.findViewById(R.id.spnMainTrans);
 
-//        ArrayList<String> otherList = new ArrayList<String>();
-//        otherList.add("Pre Sales");
-//        otherList.add("Van Sales");
-//        otherList.add("Sales Return");
-//
-//        final ArrayAdapter<String> otherAdapter = new ArrayAdapter<String>(getActivity(),R.layout.reason_spinner_item, otherList);
-//        otherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spnTrans.setAdapter(otherAdapter);
+
+        ArrayList<String> otherList = new ArrayList<String>();
+        otherList.add("Pre Sales");
+        otherList.add("Receipt");
+
+        final ArrayAdapter<String> otherAdapter = new ArrayAdapter<String>(getActivity(),R.layout.reason_spinner_item, otherList);
+        otherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnTrans.setAdapter(otherAdapter);
 
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
@@ -90,35 +103,36 @@ public class TransactionDetailsFragment extends Fragment {
 //            }
 //        });
 
-//        spnTrans.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                if (position==0)
-//                {
-//                    expListView.setAdapter((BaseExpandableListAdapter)null);
-//                    //expListView.clearTextFilter();
-//                    preparePreListData();
-//                }
-//                else if (position == 1)
-//                {
-//                    expListView.setAdapter((BaseExpandableListAdapter)null);
-//                    //expListView.clearTextFilter();
-//                    prepareVanListData();
-//                }
-//                else
-//                {
-//                    expListView.setAdapter((BaseExpandableListAdapter)null);
-//                    //expListView.clearTextFilter();
-//                    prepareRetListData();
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parentView) {
-//                // your code here
-//            }
-//
-//        });
+
+        spnTrans.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (position==0)
+                {
+                    expListView.setAdapter((BaseExpandableListAdapter)null);
+                    //expListView.clearTextFilter();
+                    preparePreListData();
+                }
+                else if (position == 1)
+                {
+                    expListView.setAdapter((BaseExpandableListAdapter)null);
+                    //expListView.clearTextFilter();
+                    prepareReceiptList();
+                }
+                else
+                {
+                    expListView.setAdapter((BaseExpandableListAdapter)null);
+                    //expListView.clearTextFilter();
+                    preparePreListData();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
         preparePreListData();
 
@@ -152,6 +166,36 @@ public class TransactionDetailsFragment extends Fragment {
 
             listPreAdapter = new ExpandablePreListAdapter(getActivity(), listPreDataHeader, listPreDataChild);
             expListView.setAdapter(listPreAdapter);
+        }
+    }
+
+    public void prepareReceiptList()
+    {
+        listReceiptHed = new ReceiptController(getActivity()).getAllCompletedRecHedS();
+
+        if (listReceiptHed.size()== 0)
+        {
+            Toast.makeText(getActivity(), "No data to display", Toast.LENGTH_LONG).show();
+
+            listReceiptDet = new HashMap<ReceiptHed, List<ReceiptDet>>();
+
+            for(ReceiptHed recHed : listReceiptHed){
+                listReceiptDet.put(recHed,recHed.getRecDetList());
+            }
+
+            listRecAdapter = new ExpandableReceiptListAdapter(getActivity(), listReceiptHed, listReceiptDet);
+            expListView.setAdapter(listRecAdapter);
+        }
+        else
+        {
+            listReceiptDet = new HashMap<ReceiptHed, List<ReceiptDet>>();
+
+            for(ReceiptHed recHed : listReceiptHed){
+                listReceiptDet.put(recHed,recHed.getRecDetList());
+            }
+
+            listRecAdapter = new ExpandableReceiptListAdapter(getActivity(), listReceiptHed, listReceiptDet);
+            expListView.setAdapter(listRecAdapter);
         }
     }
 
@@ -202,6 +246,8 @@ public class TransactionDetailsFragment extends Fragment {
     public class ExpandablePreListAdapter extends BaseExpandableListAdapter {
 
         private Context _context;
+
+
         private List<Order> _listDataHeader; // header titles
         // child data in format of header title, child title
         private HashMap<Order, List<OrderDetail>> _listDataChild;
@@ -344,6 +390,153 @@ public class TransactionDetailsFragment extends Fragment {
         }
     }
 
+
+    // adapter for receipt
+
+    public class ExpandableReceiptListAdapter extends BaseExpandableListAdapter {
+
+        private Context _context;
+        private List<ReceiptHed> _listDataHeader; // header titles
+        // child data in format of header title, child title
+        private HashMap<ReceiptHed, List<ReceiptDet>> _listDataChild;
+
+        public ExpandableReceiptListAdapter(Context context, List<ReceiptHed> listDataHeader, HashMap<ReceiptHed, List<ReceiptDet>> listChildData) {
+            this._context = context;
+            this._listDataHeader = listDataHeader;
+            this._listDataChild = listChildData;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosititon) {
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                    .get(childPosititon);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, final int childPosition,
+                                 boolean isLastChild, View grpview, ViewGroup parent) {
+
+            final ReceiptDet childText = (ReceiptDet) getChild(groupPosition, childPosition);
+
+            if (grpview == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this._context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                grpview = infalInflater.inflate(R.layout.list_items, null);
+            }
+
+            TextView txtListChild = (TextView) grpview.findViewById(R.id.itemcode);
+            TextView txtListChild1 = (TextView) grpview.findViewById(R.id.qty);
+            TextView txtListChild2 = (TextView) grpview.findViewById(R.id.amount);
+
+            txtListChild.setText("RefNo - "+childText.getFPRECDET_REFNO1());
+            txtListChild1.setVisibility(View.INVISIBLE);
+            txtListChild2.setText("Amount - "+numberFormat.format(Double.parseDouble(childText.getFPRECDET_AMT())));
+            return grpview;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                    .size();
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return this._listDataHeader.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return this._listDataHeader.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+            final ReceiptHed headerTitle = (ReceiptHed) getGroup(groupPosition);
+            if (convertView == null) {
+                LayoutInflater infalInflater = (LayoutInflater) this._context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalInflater.inflate(R.layout.transaction_details_list_group, null);
+                //convertView = infalInflater.inflate(R.layout.list_group, null);
+            }
+
+            TextView lblListHeader = (TextView) convertView
+                    .findViewById(R.id.refno);
+            TextView deb = (TextView) convertView.findViewById(R.id.debname);
+            //TextView deb = (TextView) convertView.findViewById(R.id.debcode);
+            TextView date = (TextView) convertView.findViewById(R.id.date);
+            TextView tot = (TextView) convertView.findViewById(R.id.total);
+            TextView stats = (TextView) convertView.findViewById(R.id.status);
+            TextView delete = (TextView) convertView.findViewById(R.id.type);
+            lblListHeader.setTypeface(null, Typeface.BOLD);
+            lblListHeader.setText(headerTitle.getFPRECHED_REFNO());
+            CustomerController cus = new CustomerController(_context);
+            deb.setText(cus.getSelectedCustomerByCode(headerTitle.getFPRECHED_DEBCODE()).getCusName());
+            //deb.setText(headerTitle.getORDER_DEBCODE());
+            if(headerTitle.getFPRECHED_ISSYNCED().equals("1")){
+                delete.setBackground(null);
+                stats.setText("Synced");
+                stats.setTextColor(getResources().getColor(R.color.material_alert_positive_button));
+            }else{
+                delete.setBackground(getResources().getDrawable(R.drawable.icon_minus));
+                stats.setText("Not Synced");
+                stats.setTextColor(getResources().getColor(R.color.material_alert_negative_button));
+
+            }
+            //type.setText(headerTitle.getORDER_TXNTYPE());
+            date.setText(headerTitle.getFPRECHED_TXNDATE());
+            tot.setText(headerTitle.getFPRECHED_TOTALAMT());
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteOrder(headerTitle.getFPRECHED_REFNO());
+                }
+            });
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            double grossTotal = 0;
+
+
+            List<ReceiptHed> searchingDetails = _listDataHeader;
+
+
+            for (ReceiptHed rec : searchingDetails) {
+
+                if (rec != null) {
+                    grossTotal += Double.parseDouble(rec.getFPRECHED_TOTALAMT());
+
+                }
+            }
+
+        }
+    }
     public void deleteOrder(final String RefNo) {
 
         MaterialDialog materialDialog = new MaterialDialog.Builder(getActivity())

@@ -25,18 +25,23 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="30dp"
                 android:orientation="horizontal"
                 android:layout_margin="10dp"
                 android:weightSum="5"
-                android:visibility="gone">
+               >
 
-                <TextView
+                <com.datamation.smackcerasfa.utils.CustomFont
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Main Transactions" />
+                    android:text="TRANSACTION TYPE"
+                    android:textColor="@color/greenColor"
+                    android:textSize="18sp"
+                    />
 
                 <Spinner
                     android:id="@+id/spnMainTrans"
@@ -121,20 +126,21 @@
 
     </RelativeLayout>
 
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeToRefresh"
-        android:layout_below="@+id/fragment_order_details_header_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_order_details_header_container"
+        >
 
         <ExpandableListView
             android:id="@+id/lvExp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="50dp"/>
+            android:layout_margin="50dp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1114,7 +1114,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 //            break;
             case UPLOAD_RECEIPT:{
                 ReceiptController rece = new ReceiptController(getActivity());
-                ArrayList<ReceiptHed> collectedOutstanding = rece.getAllCompletedRecHedS("");
+                ArrayList<ReceiptHed> collectedOutstanding = rece.getAllUnsyncedRecHed();
                 new UploadReceipt(getActivity(),FragmentTools.this,collectedOutstanding).execute();
                 Log.v(">>upload>>", "Upload Receipt execute finish");
             }

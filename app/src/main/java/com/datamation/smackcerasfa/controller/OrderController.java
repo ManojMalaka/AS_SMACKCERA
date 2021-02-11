@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class OrderController {
     private SQLiteDatabase dB;
@@ -48,7 +49,7 @@ public class OrderController {
     public static final String REFNO = "RefNo";
     public static final String TXNDATE = "TxnDate";
     public static final String REPCODE = "RepCode";
-        public static final String DEALCODE = "DealCode";
+    public static final String DEALCODE = "DealCode";
     public static final String DEBCODE = "DebCode";
 
 
@@ -102,7 +103,7 @@ public class OrderController {
     public static final String CREATE_FORDHED_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_FORDHED + " (" + FORDHED_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + FORDHED_ADD_MACH + " TEXT, " +
             FORDHED_ADD_DATE + " TEXT," +
-            FORDHED_ADD_USER + " TEXT, "  + DEALCODE + " TEXT, " + FORDHED_AREA_CODE + " TEXT, " +
+            FORDHED_ADD_USER + " TEXT, " + DEALCODE + " TEXT, " + FORDHED_AREA_CODE + " TEXT, " +
             FORDHED_APP_DATE + " TEXT, " + FORDHED_ADDRESS + " TEXT, " + FORDHED_APPSTS + " TEXT, " + FORDHED_APP_USER +
             " TEXT, " + FORDHED_BP_TOTAL_DIS + " TEXT, " + FORDHED_B_TOTAL_AMT + " TEXT, " +
             FORDHED_B_TOTAL_DIS + " TEXT, " + FORDHED_B_TOTAL_TAX + " TEXT, " + FORDHED_COST_CODE + " TEXT, " +
@@ -115,7 +116,7 @@ public class OrderController {
             " TEXT, " + FORDHED_LATITUDE + " TEXT, " + FORDHED_START_TIME_SO + " TEXT, " + FORDHED_IS_SYNCED + " TEXT, " +
             FORDHED_IS_ACTIVE + " TEXT, " + FORDHED_DELV_DATE + " TEXT, " + FORDHED_ROUTE_CODE + " TEXT, " +
             FORDHED_HED_DIS_VAL + " TEXT, " + FORDHED_HED_DIS_PER_VAL + " TEXT," + FORDHED_PAYMENT_TYPE + " TEXT," +
-            FORDHED_FEEDBACK + " TEXT," +FORDHED_END_TIME_SO + " TEXT," + FORDHED_UPLOAD_TIME + " TEXT); ";
+            FORDHED_FEEDBACK + " TEXT," + FORDHED_END_TIME_SO + " TEXT," + FORDHED_UPLOAD_TIME + " TEXT); ";
     // create String
 
     public static final String CREATE_TABLE_ORDER = " CREATE  TABLE IF NOT EXISTS " + TABLE_ORDER + " (" +
@@ -199,7 +200,7 @@ public class OrderController {
                 int cn = cursor.getCount();
                 if (cn > 0) {
                     count = dB.update(TABLE_FORDHED, values, REFNO + " =?",
-                            new String[] { String.valueOf(ordHed.getORDER_REFNO()) });
+                            new String[]{String.valueOf(ordHed.getORDER_REFNO())});
                 } else {
                     count = (int) dB.insert(TABLE_FORDHED, null, values);
                 }
@@ -236,7 +237,7 @@ public class OrderController {
             //String selectQuery = "select DebCode, RefNo from fordHed " +
             String selectQuery = "select DebName, RefNo, isSynced, TxnDate, TotalAmt from fordHed " +
                     //			" fddbnote fddb where hed.refno = det.refno and det.FPRECDET_REFNO1 = fddb.refno and hed.txndate = '2019-04-12'";
-                    "  where txndate = '" + curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDate) +"' and isActive = '" +"0"+"'";
+                    "  where txndate = '" + curYear + "-" + String.format("%02d", curMonth) + "-" + String.format("%02d", curDate) + "' and isActive = '" + "0" + "'";
 
             cursor = dB.rawQuery(selectQuery, null);
 
@@ -340,7 +341,7 @@ public class OrderController {
 
             if (cn > 0) {
                 count = dB.update(TABLE_FORDHED, values, REFNO + " =?",
-                        new String[] { String.valueOf(refno) });
+                        new String[]{String.valueOf(refno)});
             }
 
         } catch (Exception e) {
@@ -373,10 +374,9 @@ public class OrderController {
             ContentValues values = new ContentValues();
 
 
-
             //if (hed.getORDER_IS_SYNCED().equals("1")) {
-                values.put(FORDHED_IS_SYNCED, "1");
-                count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { String.valueOf(hed.getORDER_REFNO()) });
+            values.put(FORDHED_IS_SYNCED, "1");
+            count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[]{String.valueOf(hed.getORDER_REFNO())});
 //            }else{
 //                values.put(FORDHED_IS_SYNCED, "0");
 //                count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { String.valueOf(hed.getORDER_REFNO()) });
@@ -395,7 +395,8 @@ public class OrderController {
         return count;
 
     }
-    public int updateIsSynced(String refno,String res) {
+
+    public int updateIsSynced(String refno, String res) {
 
         int count = 0;
 
@@ -410,10 +411,9 @@ public class OrderController {
             ContentValues values = new ContentValues();
 
 
-
             //if (hed.getORDER_IS_SYNCED().equals("1")) {
             values.put(FORDHED_IS_SYNCED, res);
-            count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { refno });
+            count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[]{refno});
 //            }else{
 //                values.put(FORDHED_IS_SYNCED, "0");
 //                count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { String.valueOf(hed.getORDER_REFNO()) });
@@ -432,6 +432,7 @@ public class OrderController {
         return count;
 
     }
+
     public int updateIsSynced(String refno) {
 
         int count = 0;
@@ -447,10 +448,9 @@ public class OrderController {
             ContentValues values = new ContentValues();
 
 
-
             //if (hed.getORDER_IS_SYNCED().equals("1")) {
             values.put(FORDHED_IS_SYNCED, "1");
-            count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { refno });
+            count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[]{refno});
 //            }else{
 //                values.put(FORDHED_IS_SYNCED, "0");
 //                count = dB.update(TABLE_FORDHED, values, REFNO + " =?", new String[] { String.valueOf(hed.getORDER_REFNO()) });
@@ -469,54 +469,54 @@ public class OrderController {
         return count;
 
     }
-    public int updateFeedback(String feedback,String refno) {
 
-            int count = 0;
+    public int updateFeedback(String feedback, String refno) {
 
-            if (dB == null) {
-                open();
-            } else if (!dB.isOpen()) {
-                open();
-            }
-            Cursor cursor = null;
+        int count = 0;
 
-            try {
-
-                    String selectQuery = "SELECT * FROM " + TABLE_FORDHED + " WHERE " + REFNO
-                            + " = '" + refno + "'";
-
-                    cursor = dB.rawQuery(selectQuery, null);
-
-                    ContentValues values = new ContentValues();
-
-                    values.put(FORDHED_FEEDBACK, feedback);
-
-
-                    int cn = cursor.getCount();
-                    if (cn > 0) {
-                        count = dB.update(TABLE_FORDHED, values, REFNO + " =?",
-                                new String[] { String.valueOf(refno) });
-                    } else {
-                        count = (int) dB.insert(TABLE_FORDHED, null, values);
-                    }
-
-
-            } catch (Exception e) {
-
-                Log.v(TAG + " ExcptnInFeedbackUpdate", e.toString());
-
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-                dB.close();
-            }
-            return count;
-
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
         }
+        Cursor cursor = null;
 
-    public int getUnsyncedOrderCount()
-    {
+        try {
+
+            String selectQuery = "SELECT * FROM " + TABLE_FORDHED + " WHERE " + REFNO
+                    + " = '" + refno + "'";
+
+            cursor = dB.rawQuery(selectQuery, null);
+
+            ContentValues values = new ContentValues();
+
+            values.put(FORDHED_FEEDBACK, feedback);
+
+
+            int cn = cursor.getCount();
+            if (cn > 0) {
+                count = dB.update(TABLE_FORDHED, values, REFNO + " =?",
+                        new String[]{String.valueOf(refno)});
+            } else {
+                count = (int) dB.insert(TABLE_FORDHED, null, values);
+            }
+
+
+        } catch (Exception e) {
+
+            Log.v(TAG + " ExcptnInFeedbackUpdate", e.toString());
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dB.close();
+        }
+        return count;
+
+    }
+
+    public int getUnsyncedOrderCount() {
         if (dB == null) {
             open();
         } else if (!dB.isOpen()) {
@@ -618,6 +618,7 @@ public class OrderController {
 
         return list;
     }
+
     public int IsSavedHeader(String refno) {
 
         int count = 0;
@@ -662,6 +663,7 @@ public class OrderController {
         return count;
 
     }
+
     public int IsSyncedOrder(String refno) {
 
         int count = 0;
@@ -676,7 +678,7 @@ public class OrderController {
 
         try {
 
-            String selectQuery = "SELECT * FROM " + TABLE_FORDHED + " WHERE " + DatabaseHelper.REFNO + " = '" + refno + "' and "+ ORDER_IS_SYNCED+ " = '1' ";
+            String selectQuery = "SELECT * FROM " + TABLE_FORDHED + " WHERE " + DatabaseHelper.REFNO + " = '" + refno + "' and " + ORDER_IS_SYNCED + " = '1' ";
 
             cursor = dB.rawQuery(selectQuery, null);
 
@@ -704,6 +706,62 @@ public class OrderController {
             dB.close();
         }
         return count;
+
+    }
+
+
+    public ArrayList<Order> getAllNonActiveOrdHed(String fromDt, String toDt) {
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        @SuppressWarnings("static-access")
+        String selectQuery = "select * from " + TABLE_FORDHED + " Where " + ORDER_IS_ACTIVE + "='0' and ("+FORDHED_ADD_DATE+" >= '"+fromDt+"' and "+FORDHED_ADD_DATE+" <= '"+toDt+"')";
+
+        Cursor cursor = dB.rawQuery(selectQuery, null);
+        ArrayList<Order> list = new ArrayList<Order>();
+
+        localSP = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+
+        Order presale = new Order();
+
+        while (cursor.moveToNext()) {
+
+            OrderDetailController detDS = new OrderDetailController(context);
+
+            ReferenceDetailDownloader branchDS = new ReferenceDetailDownloader(context);
+            presale.setORDER_REFNO(cursor.getString(cursor.getColumnIndex(REFNO)));
+            presale.setORDER_ADDDATE(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_DATE)));
+            presale.setORDER_ADDMACH(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_MACH)));
+            presale.setORDER_ADDUSER(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_USER)));
+            presale.setORDER_DEBCODE(cursor.getString(cursor.getColumnIndex(DEBCODE)));
+            presale.setORDER_DEBNAME(cursor.getString(cursor.getColumnIndex(FORDHED_DEBNAME)));
+            // presale.setORDER_ADDTIME(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
+
+            presale.setORDER_START_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
+            presale.setORDER_LOCCODE(cursor.getString(cursor.getColumnIndex(FORDHED_LOC_CODE)));
+            presale.setORDER_END_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_END_TIME_SO)));
+            presale.setORDER_AREACODE(cursor.getString(cursor.getColumnIndex(FORDHED_AREA_CODE)));
+            presale.setORDER_DEALCODE(cursor.getString(cursor.getColumnIndex(DEALCODE)));
+            presale.setORDER_LONGITUDE(cursor.getString(cursor.getColumnIndex(FORDHED_LONGITUDE)));
+            presale.setORDER_LATITUDE(cursor.getString(cursor.getColumnIndex(FORDHED_LATITUDE)));
+            presale.setORDER_MANUREF(cursor.getString(cursor.getColumnIndex(FORDHED_MANU_REF)));
+            presale.setORDER_REMARKS(cursor.getString(cursor.getColumnIndex(FORDHED_REMARKS)));
+            presale.setORDER_REPCODE(cursor.getString(cursor.getColumnIndex(REPCODE)));
+            presale.setORDER_TOTALAMT(cursor.getString(cursor.getColumnIndex(FORDHED_TOTAL_AMT)));
+            presale.setORDER_TXNDATE(cursor.getString(cursor.getColumnIndex(TXNDATE)));
+            presale.setORDER_IS_ACTIVE(cursor.getString(cursor.getColumnIndex(FORDHED_IS_ACTIVE)));
+            presale.setORDER_ROUTECODE(cursor.getString(cursor.getColumnIndex(FORDHED_ROUTE_CODE)));
+            presale.setORDER_DELIVERY_DATE(cursor.getString(cursor.getColumnIndex(FORDHED_DELV_DATE)));
+            presale.setORDER_PAYTYPE(cursor.getString(cursor.getColumnIndex(FORDHED_PAYMENT_TYPE)));
+            presale.setORDER_FEEDBACK(cursor.getString(cursor.getColumnIndex(FORDHED_FEEDBACK)));
+            presale.setOrdDet(detDS.getAllActives(cursor.getString(cursor.getColumnIndex(REFNO))));
+            list.add(presale);
+        }
+
+        return list;
 
     }
 
@@ -735,7 +793,7 @@ public class OrderController {
             presale.setORDER_ADDUSER(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_USER)));
             presale.setORDER_DEBCODE(cursor.getString(cursor.getColumnIndex(DEBCODE)));
             presale.setORDER_DEBNAME(cursor.getString(cursor.getColumnIndex(FORDHED_DEBNAME)));
-           // presale.setORDER_ADDTIME(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
+            // presale.setORDER_ADDTIME(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
 
             presale.setORDER_START_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
             presale.setORDER_LOCCODE(cursor.getString(cursor.getColumnIndex(FORDHED_LOC_CODE)));
@@ -761,6 +819,7 @@ public class OrderController {
         return presale;
 
     }
+
     public String getRefnoByDebcode(String refno) {
 
         if (dB == null) {
@@ -798,12 +857,12 @@ public class OrderController {
 
         try {
 
-            String selectQuery = "SELECT * FROM " + TABLE_ORDER + " WHERE " +TXNDATE + " BETWEEN '"+ DateFrom + "' AND '" + DateTo + "' AND " + ORDER_IS_ACTIVE + "= '0' AND " + ORDER_IS_SYNCED + " ='1' " ;
+            String selectQuery = "SELECT * FROM " + TABLE_ORDER + " WHERE " + TXNDATE + " BETWEEN '" + DateFrom + "' AND '" + DateTo + "' AND " + ORDER_IS_ACTIVE + "= '0' AND " + ORDER_IS_SYNCED + " ='1' ";
             cursor = dB.rawQuery(selectQuery, null);
             int cn = cursor.getCount();
 
             if (cn > 0) {
-                int success = dB.delete(TABLE_ORDER, TXNDATE + " BETWEEN '"+ DateFrom + "' AND '" + DateTo + "' AND " + ORDER_IS_ACTIVE + "= '0' AND " + ORDER_IS_SYNCED + " ='1' ", null);
+                int success = dB.delete(TABLE_ORDER, TXNDATE + " BETWEEN '" + DateFrom + "' AND '" + DateTo + "' AND " + ORDER_IS_ACTIVE + "= '0' AND " + ORDER_IS_SYNCED + " ='1' ", null);
                 count = success;
                 Log.v("Success", success + "");
             }
@@ -947,8 +1006,7 @@ public class OrderController {
 
     }
 
-    public String getActiveRefNoFromOrders()
-    {
+    public String getActiveRefNoFromOrders() {
         if (dB == null) {
             open();
         } else if (!dB.isOpen()) {
@@ -962,10 +1020,8 @@ public class OrderController {
         Cursor cursor = dB.rawQuery(selectQuery, null);
 
         try {
-            if (cursor.getCount()>0)
-            {
-                while(cursor.moveToNext())
-                {
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
                     refNo = cursor.getString(cursor.getColumnIndex(REFNO));
                 }
             }
