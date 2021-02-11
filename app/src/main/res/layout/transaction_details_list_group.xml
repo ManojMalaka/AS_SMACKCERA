@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="8dp"
     android:layout_margin="8dp">
 
@@ -15,7 +15,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/white">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,7 +33,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/debcode"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="16dp" />
+                tools:layout_editor_absoluteY="16dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/debcode"
@@ -64,7 +65,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/date"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/refno"
-                tools:layout_editor_absoluteY="32dp" />
+                tools:layout_editor_absoluteY="32dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/date"
@@ -79,7 +81,9 @@
                 app:layout_constraintEnd_toStartOf="@+id/total"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/debcode"
-                tools:layout_editor_absoluteY="32dp" />
+                tools:layout_editor_absoluteY="32dp"
+                android:layout_weight="1
+"/>
 
             <TextView
                 android:id="@+id/total"
@@ -94,7 +98,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/status"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/date"
-                tools:layout_editor_absoluteY="32dp" />
+                tools:layout_editor_absoluteY="32dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/status"
@@ -109,7 +114,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/type"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/total"
-                tools:layout_editor_absoluteY="32dp" />
+                tools:layout_editor_absoluteY="32dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/type"
@@ -124,9 +130,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/status"
-                tools:layout_editor_absoluteY="32dp" />
+                tools:layout_editor_absoluteY="32dp"
+                />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 

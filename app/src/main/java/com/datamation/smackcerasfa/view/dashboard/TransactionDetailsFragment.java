@@ -147,14 +147,6 @@ public class TransactionDetailsFragment extends Fragment {
         {
             Toast.makeText(getActivity(), "No data to display", Toast.LENGTH_LONG).show();
 
-            listPreDataChild = new HashMap<Order, List<OrderDetail>>();
-
-            for(Order free : listPreDataHeader){
-                listPreDataChild.put(free,new OrderDetailController(getActivity()).getTodayOrderDets(free.getORDER_REFNO()));
-            }
-
-            listPreAdapter = new ExpandablePreListAdapter(getActivity(), listPreDataHeader, listPreDataChild);
-            expListView.setAdapter(listPreAdapter);
         }
         else
         {
@@ -177,14 +169,6 @@ public class TransactionDetailsFragment extends Fragment {
         {
             Toast.makeText(getActivity(), "No data to display", Toast.LENGTH_LONG).show();
 
-            listReceiptDet = new HashMap<ReceiptHed, List<ReceiptDet>>();
-
-            for(ReceiptHed recHed : listReceiptHed){
-                listReceiptDet.put(recHed,recHed.getRecDetList());
-            }
-
-            listRecAdapter = new ExpandableReceiptListAdapter(getActivity(), listReceiptHed, listReceiptDet);
-            expListView.setAdapter(listRecAdapter);
         }
         else
         {

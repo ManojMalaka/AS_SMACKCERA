@@ -734,29 +734,14 @@ public class OrderController {
             ReferenceDetailDownloader branchDS = new ReferenceDetailDownloader(context);
             presale.setORDER_REFNO(cursor.getString(cursor.getColumnIndex(REFNO)));
             presale.setORDER_ADDDATE(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_DATE)));
-            presale.setORDER_ADDMACH(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_MACH)));
-            presale.setORDER_ADDUSER(cursor.getString(cursor.getColumnIndex(FORDHED_ADD_USER)));
+
             presale.setORDER_DEBCODE(cursor.getString(cursor.getColumnIndex(DEBCODE)));
             presale.setORDER_DEBNAME(cursor.getString(cursor.getColumnIndex(FORDHED_DEBNAME)));
-            // presale.setORDER_ADDTIME(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
 
-            presale.setORDER_START_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_START_TIME_SO)));
-            presale.setORDER_LOCCODE(cursor.getString(cursor.getColumnIndex(FORDHED_LOC_CODE)));
-            presale.setORDER_END_TIMESO(cursor.getString(cursor.getColumnIndex(FORDHED_END_TIME_SO)));
-            presale.setORDER_AREACODE(cursor.getString(cursor.getColumnIndex(FORDHED_AREA_CODE)));
-            presale.setORDER_DEALCODE(cursor.getString(cursor.getColumnIndex(DEALCODE)));
-            presale.setORDER_LONGITUDE(cursor.getString(cursor.getColumnIndex(FORDHED_LONGITUDE)));
-            presale.setORDER_LATITUDE(cursor.getString(cursor.getColumnIndex(FORDHED_LATITUDE)));
-            presale.setORDER_MANUREF(cursor.getString(cursor.getColumnIndex(FORDHED_MANU_REF)));
-            presale.setORDER_REMARKS(cursor.getString(cursor.getColumnIndex(FORDHED_REMARKS)));
             presale.setORDER_REPCODE(cursor.getString(cursor.getColumnIndex(REPCODE)));
             presale.setORDER_TOTALAMT(cursor.getString(cursor.getColumnIndex(FORDHED_TOTAL_AMT)));
             presale.setORDER_TXNDATE(cursor.getString(cursor.getColumnIndex(TXNDATE)));
             presale.setORDER_IS_ACTIVE(cursor.getString(cursor.getColumnIndex(FORDHED_IS_ACTIVE)));
-            presale.setORDER_ROUTECODE(cursor.getString(cursor.getColumnIndex(FORDHED_ROUTE_CODE)));
-            presale.setORDER_DELIVERY_DATE(cursor.getString(cursor.getColumnIndex(FORDHED_DELV_DATE)));
-            presale.setORDER_PAYTYPE(cursor.getString(cursor.getColumnIndex(FORDHED_PAYMENT_TYPE)));
-            presale.setORDER_FEEDBACK(cursor.getString(cursor.getColumnIndex(FORDHED_FEEDBACK)));
             presale.setOrdDet(detDS.getAllActives(cursor.getString(cursor.getColumnIndex(REFNO))));
             list.add(presale);
         }

@@ -1249,7 +1249,6 @@ public class ReceiptController {
             while (cursor.moveToNext()) {
 
 
-
                 mapper.setNextNumVal(new ReferenceController(context)
                         .getCurrentNextNumVal(context.getResources().getString(R.string.ReceiptNumVal)));
 
@@ -1279,5 +1278,45 @@ public class ReceiptController {
         }
 
         return mapper;
+    }
+
+    public ArrayList<ReceiptHed> getAllNonActiveRecHeds(String fromDt, String toDt) {
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        ArrayList<ReceiptHed> list = new ArrayList<ReceiptHed>();
+        String selectQuery;
+        ReceiptHed mapper = new ReceiptHed();
+        try {
+            selectQuery = "select * from " + TABLE_FPRECHEDS + " Where "+ FPRECHED_ISACTIVE + "='0' and ("+FPRECHED_ADDDATE+" >= '"+fromDt+"' and "+FPRECHED_ADDDATE+" <= '"+toDt+"')";
+
+            localSP = context.getSharedPreferences(SETTINGS,0);
+            Cursor cursor = dB.rawQuery(selectQuery, null);
+
+            while (cursor.moveToNext()) {
+                mapper.setNextNumVal(new ReferenceController(context)
+                        .getCurrentNextNumVal(context.getResources().getString(R.string.ReceiptNumVal)));
+
+                mapper.setFPRECHED_REFNO(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REFNO)));
+                mapper.setFPRECHED_ADDDATE(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDDATE)));
+                mapper.setFPRECHED_DEBCODE(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEBCODE)));
+                mapper.setFPRECHED_TOTALAMT(cursor.getString(cursor.getColumnIndex(FPRECHED_TOTALAMT)));
+
+                mapper.setRecDetList(new ReceiptDetController(context).GetReceiptByRefno(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REFNO))));
+                list.add(mapper);
+            }
+            cursor.close();
+        } catch (Exception e) {
+
+            Log.v(TAG + " Exception", e.toString());
+
+        } finally {
+            dB.close();
+        }
+
+        return list;
     }
 }
