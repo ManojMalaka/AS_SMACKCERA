@@ -527,6 +527,7 @@ public class ReceiptHeader extends Fragment {
         recHed.setFPRECHED_ISACTIVE("1");
         recHed.setFPRECHED_ISDELETE("0");
         recHed.setFPRECHED_ISSYNCED("0");
+        recHed.setFPRECHED_START_TIME(currentTime());
         recHed.setFPRECHED_REPCODE(new SalRepController(getActivity()).getCurrentRepCode());
         recHed.setFPRECHED_TXNDATE(currnentDate.getText().toString());
         recHed.setFPRECHED_TXNTYPE("42");

@@ -279,6 +279,7 @@ public class ReceiptController {
         ArrayList<ReceiptHed> list = new ArrayList<ReceiptHed>();
         String selectQuery;
 
+
         try {
             if (refno.equals("")) {
 
@@ -336,6 +337,7 @@ public class ReceiptController {
                 recHed.setFPRECHED_TXNTYPE(cursor.getString(cursor.getColumnIndex(FPRECHED_TXNTYPE)));
                 //	recHed.setFPRECHED_ADDUSER_NEW(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDUSER_NEW)));
 
+
                 list.add(recHed);
 
             }
@@ -351,6 +353,83 @@ public class ReceiptController {
         return list;
     }
 
+    /*
+     * create for all receipt MMS ***2021/02
+     */
+    public ArrayList<ReceiptHed> getAllCompletedRecHedS() {
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        ArrayList<ReceiptHed> list = new ArrayList<ReceiptHed>();
+        String selectQuery;
+
+
+        try {
+
+            selectQuery = "select * from " + TABLE_FPRECHEDS;
+
+
+            Cursor cursor = dB.rawQuery(selectQuery, null);
+
+            while (cursor.moveToNext()) {
+
+                ReceiptHed recHed = new ReceiptHed();
+
+                recHed.setFPRECHED_ADDDATE(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDDATE)));
+                recHed.setFPRECHED_ADDMACH(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDMACH)));
+                recHed.setFPRECHED_ADDRESS(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDRESS)));
+                recHed.setFPRECHED_ADDUSER(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDUSER)));
+                recHed.setFPRECHED_BANKCODE(cursor.getString(cursor.getColumnIndex(FPRECHED_BANKCODE)));
+                recHed.setFPRECHED_BRANCHCODE(cursor.getString(cursor.getColumnIndex(FPRECHED_BRANCHCODE)));
+                recHed.setFPRECHED_BTOTALAMT(cursor.getString(cursor.getColumnIndex(FPRECHED_BTOTALAMT)));
+                recHed.setFPRECHED_CHQDATE(cursor.getString(cursor.getColumnIndex(FPRECHED_CHQDATE)));
+                recHed.setFPRECHED_CHQNO(cursor.getString(cursor.getColumnIndex(FPRECHED_CHQNO)));
+                recHed.setFPRECHED_COSTCODE(cursor.getString(cursor.getColumnIndex(FPRECHED_COST_CODE)));
+                recHed.setFPRECHED_CURCODE(cursor.getString(cursor.getColumnIndex(FPRECHED_CURCODE)));
+                recHed.setFPRECHED_CURRATE(cursor.getString(cursor.getColumnIndex(FPRECHED_CURRATE)));
+                recHed.setFPRECHED_CURRATE1(cursor.getString(cursor.getColumnIndex(FPRECHED_CURRATE1)));
+                recHed.setFPRECHED_CUSBANK(cursor.getString(cursor.getColumnIndex(FPRECHED_CUSBANK)));
+                recHed.setFPRECHED_DEBCODE(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DEBCODE)));
+                recHed.setFPRECHED_END_TIME(cursor.getString(cursor.getColumnIndex(FPRECHED_END_TIME)));
+                recHed.setFPRECHED_ID(cursor.getString(cursor.getColumnIndex(FPRECHED_ID)));
+                recHed.setFPRECHED_ISACTIVE(cursor.getString(cursor.getColumnIndex(FPRECHED_ISACTIVE)));
+                recHed.setFPRECHED_ISSYNCED(cursor.getString(cursor.getColumnIndex(FPRECHED_ISSYNCED)));
+                recHed.setFPRECHED_LATITUDE(cursor.getString(cursor.getColumnIndex(FPRECHED_LATITUDE)));
+                recHed.setFPRECHED_LONGITUDE(cursor.getString(cursor.getColumnIndex(FPRECHED_LONGITUDE)));
+                recHed.setFPRECHED_MANUREF(cursor.getString(cursor.getColumnIndex(FPRECHED_MANUREF)));
+                recHed.setFPRECHED_PAYTYPE(cursor.getString(cursor.getColumnIndex(FPRECHED_PAYTYPE)));
+                recHed.setFPRECHED_PRTCOPY(cursor.getString(cursor.getColumnIndex(FPRECHED_PRTCOPY)));
+                recHed.setFPRECHED_RECORDID(cursor.getString(cursor.getColumnIndex(FPRECHED_RECORDID)));
+                recHed.setFPRECHED_REFNO(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REFNO)));
+                recHed.setFPRECHED_REFNO1(cursor.getString(cursor.getColumnIndex(ReceiptDetController.FPRECDET_REFNO1)));
+                recHed.setFPRECHED_REMARKS(cursor.getString(cursor.getColumnIndex(FPRECHED_REMARKS)));
+                recHed.setFPRECHED_REPCODE(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REPCODE)));
+                recHed.setFPRECHED_SALEREFNO(cursor.getString(cursor.getColumnIndex(FPRECHED_SALEREFNO)));
+                recHed.setFPRECHED_START_TIME(cursor.getString(cursor.getColumnIndex(FPRECHED_START_TIME)));
+                recHed.setFPRECHED_TIMESTAMP(cursor.getString(cursor.getColumnIndex(FPRECHED_TIMESTAMP)));
+                recHed.setFPRECHED_TOTALAMT(cursor.getString(cursor.getColumnIndex(FPRECHED_TOTALAMT)));
+                recHed.setFPRECHED_TXNDATE(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TXNDATE)));
+                recHed.setFPRECHED_TXNTYPE(cursor.getString(cursor.getColumnIndex(FPRECHED_TXNTYPE)));
+                //	recHed.setFPRECHED_ADDUSER_NEW(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDUSER_NEW)));
+                recHed.setRecDetList(new ReceiptDetController(context).GetReceiptByRefno(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REFNO))));
+
+                list.add(recHed);
+
+            }
+            cursor.close();
+        } catch (Exception e) {
+
+            Log.v(TAG + " Exception", e.toString());
+
+        } finally {
+            dB.close();
+        }
+
+        return list;
+    }
     /*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
     public ArrayList<ReceiptHed> getAllCompletedRecHed(String refno) {
@@ -1145,5 +1224,60 @@ public class ReceiptController {
         }
 
         return list;
+    }
+
+    public ReceiptHed getActiveRecHed() {
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        ArrayList<ReceiptHed> list = new ArrayList<ReceiptHed>();
+        String selectQuery;
+        ReceiptHed mapper = new ReceiptHed();
+        try {
+            selectQuery = "select * from " + TABLE_FPRECHEDS + " Where "
+                    + FPRECHED_ISACTIVE + "='1' and " + FPRECHED_ISSYNCED + "='0'";
+
+            localSP = context.getSharedPreferences(SETTINGS,
+                    0);
+
+            Cursor cursor = dB.rawQuery(selectQuery, null);
+
+
+            while (cursor.moveToNext()) {
+
+
+
+                mapper.setNextNumVal(new ReferenceController(context)
+                        .getCurrentNextNumVal(context.getResources().getString(R.string.ReceiptNumVal)));
+
+                mapper.setDistDB(SharedPref.getInstance(context).getDistDB().trim());
+                mapper.setConsoleDB(SharedPref.getInstance(context).getConsoleDB().trim());
+
+                mapper.setFPRECHED_ADDDATE(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDDATE)));
+                mapper.setFPRECHED_ADDMACH(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDMACH)));
+                mapper.setFPRECHED_ADDRESS(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDRESS)));
+                mapper.setFPRECHED_ADDUSER(cursor.getString(cursor.getColumnIndex(FPRECHED_ADDUSER)));
+                mapper.setFPRECHED_BTOTALAMT(cursor.getString(cursor.getColumnIndex(FPRECHED_BTOTALAMT)));
+                mapper.setFPRECHED_CHQDATE(cursor.getString(cursor.getColumnIndex(FPRECHED_CHQDATE)));
+                mapper.setFPRECHED_END_TIME(cursor.getString(cursor.getColumnIndex(FPRECHED_END_TIME)));
+                mapper.setFPRECHED_START_TIME(cursor.getString(cursor.getColumnIndex(FPRECHED_START_TIME)));
+
+
+                mapper.setRecDetList(new ReceiptDetController(context).GetReceiptByRefno(cursor.getString(cursor.getColumnIndex(DatabaseHelper.REFNO))));
+
+            }
+            cursor.close();
+        } catch (Exception e) {
+
+            Log.v(TAG + " Exception", e.toString());
+
+        } finally {
+            dB.close();
+        }
+
+        return mapper;
     }
 }
