@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -205,7 +206,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 
         rootRef = FirebaseDatabase.getInstance().getReference();
 
-       // getImgDataFromFirebase(rootRef);
+        // getImgDataFromFirebase(rootRef);
         getVdoDataFromFirebase(rootRef);
 
         isAnyActiveImages = new InvDetController(getActivity()).isAnyActiveOrders();
@@ -264,13 +265,12 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    try
-                    {
+                    try {
                         int flag = ds.child("FLAG").getValue(Integer.class);
                         String mType = ds.child("M_TYPE").getValue(String.class);
                         List<Object> repCodeList = (List<Object>) ds.child("REPCODE").getValue();
                         String url = ds.child("URL").getValue(String.class);
-                        if(repCodeList.size()>0)
+                        if (repCodeList.size() > 0)
                             if (repCodeList.contains(pref.getLoginUser().getCode()) && (flag == 0)) {
                                 FirebaseData fd = new FirebaseData();
                                 fd.setMEDIA_FLAG(flag + "");
@@ -279,10 +279,8 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                                 vdoList.add(fd);
                                 Log.d("*TAG", url + "," + flag + "," + repCodeList + "" + pref.getLoginUser().getCode() + ", " + mType);
                             }
-                    }
-                    catch (Exception ex)
-                    {
-                        Toast.makeText(getActivity(),"Video Media Problem....",Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(getActivity(), "Video Media Problem....", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -371,6 +369,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         }
 
     }
+
     public void downloadImages() {
 
         progressDoalog = new ProgressDialog(getActivity());
@@ -397,10 +396,10 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 //                        success = folder.mkdir();
 //                    }
 //                    if (success) {
-                    if(NetworkUtil.isNetworkAvailable(getActivity())) {
+                    if (NetworkUtil.isNetworkAvailable(getActivity())) {
                         new saveImages().execute();
-                    }else{
-                        Toast.makeText(getActivity(),"No internet connection to download imags",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), "No internet connection to download imags", Toast.LENGTH_LONG).show();
                     }
                     //   }
                 }
@@ -450,7 +449,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         System.out.println(dateFormat.format(date));
 
                         File sd = Environment.getExternalStorageDirectory();
-                     //   File data = Environment.getDataDirectory();
+                        //   File data = Environment.getDataDirectory();
 
                         if (sd.canWrite()) {
 
@@ -459,7 +458,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                             URLConnection conection = url.openConnection();
                             conection.connect();
                             int lenghtOfFile = conection.getContentLength();
-                            String backupImgesPath = "//SWDIMAGES//backupname_"+dateFormat.format(date).toString()+".PNG"; // From SD directory.
+                            String backupImgesPath = "//SWDIMAGES//backupname_" + dateFormat.format(date).toString() + ".PNG"; // From SD directory.
                             File mypath = new File(new File(""), pathName);
 
                             // input stream to read file - with 8k buffer
@@ -471,7 +470,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 
                             long total = 0;
                             while ((count = input.read(data)) != -1) {
-                               total += count;
+                                total += count;
                                 // writing data to file
                                 output.write(data, 0, count);
 //                                onProgressUpdate("" + (int) ((total * 100) / lenghtOfFile), "" + count, "" + i);
@@ -481,14 +480,12 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 
                             // closing streams
                             output.close();
-                          //  input.close();
-                            Toast.makeText(getActivity(), "Images Saved Successful!,Check your gallery",Toast.LENGTH_SHORT).show();
-
-
+                            //  input.close();
+                            Toast.makeText(getActivity(), "Images Saved Successful!,Check your gallery", Toast.LENGTH_SHORT).show();
 
 
                         }
-                    }else {
+                    } else {
                         // Do something else on failure
                         Toast.makeText(getActivity(), "Images Saved Failed!", Toast.LENGTH_SHORT).show();
                     }
@@ -498,8 +495,6 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     Toast.makeText(getActivity(), "Images Saved Failed!", Toast.LENGTH_SHORT).show();
 
                 }
-
-
 
 
 //                try {
@@ -632,7 +627,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
             super.onPostExecute(s);
             PD.dismiss();
             isDownloadImageClick = false;
-            System.out.println("IMAGE_D_SUCCESS"+"Done");
+            System.out.println("IMAGE_D_SUCCESS" + "Done");
             new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
                     .setTitleText("Image Download Complete!")
                     .setContentText("Press Ok Button!")
@@ -642,10 +637,11 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            System.out.println("IMAGE_D_SUCCESS"+values);
+            System.out.println("IMAGE_D_SUCCESS" + values);
             PD.show();
         }
     }
+
     public void ViewVideoList() {
         final Dialog videoDialog = new Dialog(getActivity());
         videoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -795,115 +791,41 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 ///////////////////////************************************************/////////////////////////////////////////////////////////////////
                             OrderController orderHed = new OrderController(getActivity());
                             final ArrayList<Order> ordHedList = orderHed.getAllUnSyncOrdHed();//1
+
                             DayNPrdHedController npHed = new DayNPrdHedController(getActivity());
                             final ArrayList<DayNPrdHed> npHedList = npHed.getUnSyncedData();//2
+
                             SalRepController salRepController = new SalRepController(getActivity());//3
                             ArrayList<SalRep> saleRepList = salRepController.getAllUnsyncSalrep(new SalRepController(context).getCurrentRepCode());
+
                             AttendanceController attendanceController = new AttendanceController(getActivity());//4
                             ArrayList<Attendance> attendList = attendanceController.getUnsyncedTourData();
+
                             CustomerController customerDS = new CustomerController(getActivity());
                             ArrayList<Debtor> debtorlist = customerDS.getAllDebtorsToCordinatesUpdate();//5
                             ArrayList<Debtor> updExistingDebtors = customerDS.getAllUpdatedDebtors();//6
                             ArrayList<Debtor> imgDebtorList = customerDS.getAllImagUpdatedDebtors();//7
+
                             DayExpHedController exHed = new DayExpHedController(getActivity());
                             final ArrayList<DayExpHed> exHedList = exHed.getUnSyncedData();//8
+
                             NewCustomerController customerNwDS = new NewCustomerController(getActivity());
                             ArrayList<NewCustomer> newCustomersList = customerNwDS.getAllNewCustomersForSync();//9
                             // firebasetokenid - 10
 //                    /* If records available for upload then */
-                                if (ordHedList.size() <= 0 && npHedList.size() <= 0 && saleRepList.size() <= 0 && attendList.size()<= 0 && debtorlist.size()<=0 && updExistingDebtors.size() <= 0 && imgDebtorList.size()<= 0 && exHedList.size()<=0 && newCustomersList.size()<=0)
-                                {
-                                    Toast.makeText(getActivity(), "No Records to upload !", Toast.LENGTH_LONG).show();
-                                }else {
-                                    if(ordHedList.size()>0){
-                                        Toast.makeText(getActivity(), "Presale data upload completed..!", Toast.LENGTH_LONG).show();
-                                    }
-//                                   List<String> testList = new ArrayList<>();
-//                                    for(final Order order :ordHedList) {
-
-                                        new UploadPreSales(getActivity(), FragmentTools.this, UPLOADPRESALES).execute(ordHedList);
-//                                        try {
-//                                            String content_type = "application/json";
-//                                            ApiInterface apiInterface = ApiCllient.getClient(context).create(ApiInterface.class);
-//                                            JsonParser jsonParser = new JsonParser();
-//                                            String orderJson = new Gson().toJson(order);
-//                                            JsonObject objectFromString = jsonParser.parse(orderJson).getAsJsonObject();
-//                                            JsonArray jsonArray = new JsonArray();
-//                                            jsonArray.add(objectFromString);
-//                                            Call<String> resultCall = apiInterface.uploadOrder(jsonArray, content_type);
-//
-//                                            resultCall.enqueue(new Callback<String>() {
-//                                                @Override
-//                                                public void onResponse(Call<String> call, Response<String> response) {
-//
-//
-//                                                    int status = response.code();
-//                                                    Log.d(">>>response code", ">>>res " + status);
-//                                                    Log.d(">>>response message", ">>>res " + response.message());
-//                                                    Log.d(">>>response body", ">>>res " + response.body().toString());
-//                                                    String resmsg = ""+response.body().toString();
-//                                                    int resLength = response.body().toString().trim().length();
-//                                                    Log.d(">>>resLength", ">>>resLength " +resLength);
-//                                                    //  Log.d(">>>resrefno", ">>>res " + response.body().toString().trim().substring(3,resLength));
-//
-//
-//                                                    if (status == 200 && !resmsg.equals("") && !resmsg.equals(null)) {
-//                                                        mHandler.post(new Runnable() {
-//                                                            @Override
-//                                                            public void run() {
-//
-//                                                                // resultListNonProduct.add(np.getNONPRDHED_REFNO()+ "--->SUCCESS");
-//                                                                //    addRefNoResults_Non(np.getNONPRDHED_REFNO() + " --> Success\n",RCSList.size());
-//                                                                //  Log.d( ">>response"+status,""+c.getORDER_REFNO() );
-//                                                                order.setORDER_IS_SYNCED("1");
-//                                                                // new OrderController(context).updateIsSynced(c);
-//                                                                new OrderController(context).updateIsSynced(order.getORDER_REFNO(),"1");
-//                                                                //  Toast.makeText(context,np.getNONPRDHED_REFNO()+"-Non-productive uploded Successfully" , Toast.LENGTH_SHORT).show();
-//
-//                                                            }
-//                                                        });
-//                                                        //addRefNoResults(c.getORDER_REFNO() +" --> Success\n",RCSList.size());
-//
-//                                                        //  Toast.makeText(context, c.getORDER_REFNO()+" - Order uploded Successfully", Toast.LENGTH_SHORT).show();
-//                                                    } else {
-//                                                        Log.d( ">>response"+status,""+order.getORDER_REFNO() );
-//                                                        mHandler.post(new Runnable() {
-//                                                            @Override
-//                                                            public void run() {
-//
-//                                                                // resultListNonProduct.add(np.getNONPRDHED_REFNO()+ "--->SUCCESS");
-//                                                                //    addRefNoResults_Non(np.getNONPRDHED_REFNO() + " --> Success\n",RCSList.size());
-//                                                                //  Log.d( ">>response"+status,""+c.getORDER_REFNO() );
-//                                                                order.setORDER_IS_SYNCED("0");
-//                                                                new OrderController(context).updateIsSynced(order.getORDER_REFNO(),"0");
-//                                                                //  Toast.makeText(context,np.getNONPRDHED_REFNO()+"-Non-productive uploded Successfully" , Toast.LENGTH_SHORT).show();
-//
-//                                                            }
-//                                                        });
-//                                                        //  addRefNoResults(c.getORDER_REFNO() +" --> Success\n",RCSList.size());
-//                                                        //   Toast.makeText(context, c.getORDER_REFNO()+" - Order uplod Failed", Toast.LENGTH_SHORT).show();
-//                                                    }
-//
-//                                                }
-//
-//                                                @Override
-//                                                public void onFailure(Call<String> call, Throwable t) {
-//
-//                                                    Toast.makeText(context, "Error response "+t.toString(), Toast.LENGTH_SHORT).show();
-//
-//                                                }
-//                                            });
-//
-//
-//                                        } catch (Exception e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//                                    onTaskCompleted(UPLOADPRESALES,testList);
+                            if (ordHedList.size() <= 0 && npHedList.size() <= 0 && saleRepList.size() <= 0 && attendList.size() <= 0 && debtorlist.size() <= 0 && updExistingDebtors.size() <= 0 && imgDebtorList.size() <= 0 && exHedList.size() <= 0 && newCustomersList.size() <= 0) {
+                                Toast.makeText(getActivity(), "No Records to upload !", Toast.LENGTH_LONG).show();
+                            } else {
+                                if (ordHedList.size() > 0) {
+                                    Toast.makeText(getActivity(), "Presale data upload completed..!", Toast.LENGTH_LONG).show();
                                 }
 
+                                new UploadPreSales(getActivity(), FragmentTools.this, UPLOADPRESALES).execute(ordHedList);
+
+                            }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            try { // upload Non productive 04-03-2020 kaveesha
+                            try {
 
 
                             } catch (Exception e) {
@@ -1004,11 +926,16 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         DayExpHedController exHed = new DayExpHedController(getActivity());
         ArrayList<DayExpHed> exHedList = exHed.getUnSyncedData();
 
+        ReceiptController recHed = new ReceiptController(getActivity());
+        ArrayList<ReceiptHed> recHedList = recHed.getAllUnsyncedRecHed();
+
         ArrayList<Debtor> imgUpdDebtors = new CustomerController(getActivity()).getAllImagUpdatedDebtors();
         // ArrayList<ReceiptHed> rcptHedList = receipts.getAllCompletedRecHed();
 
-       // if (ordHedList.isEmpty() && npHedList.isEmpty() && exHedList.isEmpty() && imgUpdDebtors.isEmpty()) {
-        if (ordHedList.isEmpty() && npHedList.isEmpty()) {
+
+
+        // if (ordHedList.isEmpty() && npHedList.isEmpty() && exHedList.isEmpty() && imgUpdDebtors.isEmpty()) {
+        if (ordHedList.isEmpty() && npHedList.isEmpty() && recHedList.isEmpty()) {
             allUpload = true;
         } else {
             allUpload = false;
@@ -1018,26 +945,28 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
     }
 
 
-
     @Override
     public void onTaskCompleted(TaskType taskType, List<String> list) {
         resultList.addAll(list);
         switch (taskType) {
             case UPLOADPRESALES: {
-                    DayNPrdHedController npHed = new DayNPrdHedController(getActivity());
-                    final ArrayList<DayNPrdHed> npHedList = npHed.getUnSyncedData();
-                    if(npHedList.size()>0){
+                DayNPrdHedController npHed = new DayNPrdHedController(getActivity());
+                final ArrayList<DayNPrdHed> npHedList = npHed.getUnSyncedData();
+                if (npHedList.size() > 0) {
                     Toast.makeText(getActivity(), "Nonproductive data upload completed..!", Toast.LENGTH_LONG).show();
                 }
-                    new UploadNonProd(getActivity(), FragmentTools.this, TaskType.UPLOAD_NONPROD).execute(npHedList);
+                new UploadNonProd(getActivity(), FragmentTools.this, TaskType.UPLOAD_NONPROD).execute(npHedList);
 
-                    Log.v(">>upload>>", "Upload non productive execute finish");
+                Log.v(">>upload>>", "Upload non productive execute finish");
             }
             break;
-            case UPLOAD_NONPROD:{
+            case UPLOAD_NONPROD: {
                 SalRepController salRepController = new SalRepController(getActivity());
                 ArrayList<SalRep> saleRep = salRepController.getAllUnsyncSalrep(new SalRepController(getActivity()).getCurrentRepCode());
-                new UploadSalRef(getActivity(), FragmentTools.this,saleRep, TaskType.UPLOAD_ATTENDANCE).execute(saleRep);
+                if (saleRep.size() > 0) {
+                    Toast.makeText(getActivity(), "repemail data upload completed..!", Toast.LENGTH_LONG).show();
+                }
+                new UploadSalRef(getActivity(), FragmentTools.this, saleRep, TaskType.UPLOAD_ATTENDANCE).execute(saleRep);
                 Log.v(">>upload>>", "Upload repemail execute finish");
             }
             break;
@@ -1048,10 +977,10 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 //                Log.v(">>upload>>", "Upload attendance execute finish");
 //            }
 //            break;
-            case UPLOAD_ATTENDANCE:{
+            case UPLOAD_ATTENDANCE: {
                 DayExpHedController exHed = new DayExpHedController(getActivity());
                 final ArrayList<DayExpHed> exHedList = exHed.getUnSyncedData();//8
-                if(exHedList.size()>0){
+                if (exHedList.size() > 0) {
                     Toast.makeText(getActivity(), "Expense data upload completed..!", Toast.LENGTH_LONG).show();
                 }
                 new UploadExpenses(getActivity(), FragmentTools.this, TaskType.UPLOAD_RECEIPT).execute(exHedList);
@@ -1112,16 +1041,20 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 //                mUploadResult(msg);
 //            }
 //            break;
-            case UPLOAD_RECEIPT:{
+            case UPLOAD_RECEIPT: {
                 ReceiptController rece = new ReceiptController(getActivity());
                 ArrayList<ReceiptHed> collectedOutstanding = rece.getAllUnsyncedRecHed();
-                new UploadReceipt(getActivity(),FragmentTools.this,collectedOutstanding).execute();
+                if (collectedOutstanding.size() > 0) {
+                    Toast.makeText(getActivity(), "Receipt data upload completed..!", Toast.LENGTH_LONG).show();
+                }
+                new UploadReceipt(getActivity(), FragmentTools.this, collectedOutstanding).execute();
                 Log.v(">>upload>>", "Upload Receipt execute finish");
             }
             default:
                 break;
         }
     }
+
     @Override
     public void onTaskCompleted(List<String> list) {
 
@@ -1188,7 +1121,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         controls = networkFunctions.getCompanyDetails(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting company details"+e.toString());
+                        errors.add("Error getting company details" + e.toString());
                         throw e;
                     }
 
@@ -1229,7 +1162,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         companyController.createOrUpdateFControl(controlList);
                     } catch (JSONException | NumberFormatException e) {
 
-                        errors.add("Company details json error "+e.toString());
+                        errors.add("Company details json error " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1249,7 +1182,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         outlets = networkFunctions.getCustomer(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting customers "+e.toString());
+                        errors.add("Error getting customers " + e.toString());
                         throw e;
                     }
 
@@ -1276,7 +1209,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 
                     } catch (JSONException | NumberFormatException e) {
 
-                        errors.add("Customers not downloaded "+e.toString());
+                        errors.add("Customers not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1290,7 +1223,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         item = networkFunctions.getItems(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting items "+e.toString());
+                        errors.add("Error getting items " + e.toString());
                         throw e;
                     }
 
@@ -1313,7 +1246,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         itemController.InsertOrReplaceItems(itemList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Items not downloaded "+e.toString());
+                        errors.add("Items not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1332,7 +1265,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         reasons = networkFunctions.getReasons();
                     } catch (IOException e) {
-                        errors.add("Error getting reasons "+e.toString());
+                        errors.add("Error getting reasons " + e.toString());
                         throw e;
                     }
 
@@ -1356,7 +1289,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         Log.d("befor add reason tbl>>>", reasonList.toString());
                         reasonController.createOrUpdateReason(reasonList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Reasons not downloaded "+e.toString());
+                        errors.add("Reasons not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1370,17 +1303,17 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         itemLocs = networkFunctions.getItemLocations(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("error getting item locations "+e.toString());
+                        errors.add("error getting item locations " + e.toString());
                         throw e;
                     }
 
                     getActivity().runOnUiThread(
                             new Runnable() {
-                        @Override
-                        public void run() {
-                            pdialog.setMessage("Processing downloaded data (item location details)...");
-                        }
-                    });
+                                @Override
+                                public void run() {
+                                    pdialog.setMessage("Processing downloaded data (item location details)...");
+                                }
+                            });
 
                     ItemLocController itemlocController = new ItemLocController(getActivity());
                     itemlocController.deleteAllItemLoc();
@@ -1394,7 +1327,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         itemlocController.InsertOrReplaceItemLoc(itemLocList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Item locations not downloaded "+e.toString());
+                        errors.add("Item locations not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1409,7 +1342,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         locations = networkFunctions.getLocations(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting locations "+e.toString());
+                        errors.add("Error getting locations " + e.toString());
                         throw e;
                     }
 
@@ -1432,7 +1365,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         locController.createOrUpdateFLocations(locList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Locations not downloaded "+e.toString());
+                        errors.add("Locations not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1446,7 +1379,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         itemPrices = networkFunctions.getItemPrices(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting item prices "+e.toString());
+                        errors.add("Error getting item prices " + e.toString());
                         throw e;
                     }
 
@@ -1469,7 +1402,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         priceController.InsertOrReplaceItemPri(itemPriceList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Item prices not downloaded "+e.toString());
+                        errors.add("Item prices not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1489,7 +1422,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         comBranches = networkFunctions.getReferences(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting references "+e.toString());
+                        errors.add("Error getting references " + e.toString());
                         throw e;
                     }
 
@@ -1513,7 +1446,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         branchController.createOrUpdateFCompanyBranch(settingList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Reference detail not downloaded "+e.toString());
+                        errors.add("Reference detail not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1533,7 +1466,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         fddbnote = networkFunctions.getFddbNotes(repcode);
                         // Log.d(LOG_TAG, "OUTLETS :: " + outlets);
                     } catch (IOException e) {
-                        errors.add("Error getting outstandings "+e.toString());
+                        errors.add("Error getting outstandings " + e.toString());
                         throw e;
                     }
 
@@ -1557,7 +1490,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         outstandingController.createOrUpdateFDDbNote(fddbnoteList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Outstanding not downloaded"+e.toString());
+                        errors.add("Outstanding not downloaded" + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1579,7 +1512,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         tax = networkFunctions.getTax();
                     } catch (IOException e) {
-                        errors.add("Error getting tax "+e.toString());
+                        errors.add("Error getting tax " + e.toString());
                         throw e;
                     }
 
@@ -1602,7 +1535,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         taxController.createOrUpdateTax(taxList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Tax not downloaded "+e.toString());
+                        errors.add("Tax not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1616,7 +1549,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         taxHed = networkFunctions.getTaxHed();
                     } catch (IOException e) {
-                        errors.add("Error getting tax hed "+e.toString());
+                        errors.add("Error getting tax hed " + e.toString());
                         throw e;
                     }
 
@@ -1639,7 +1572,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         taxHedController.createOrUpdateTaxHed(taxHedList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("TaxHed not downloaded "+e.toString());
+                        errors.add("TaxHed not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1653,7 +1586,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         taxDet = networkFunctions.getTaxDet();
                     } catch (IOException e) {
-                        errors.add("Error getting tax det "+e.toString());
+                        errors.add("Error getting tax det " + e.toString());
                         throw e;
                     }
 
@@ -1676,7 +1609,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         taxDetController.createOrUpdateTaxDet(taxDetList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Tax Det not downloaded "+e.toString());
+                        errors.add("Tax Det not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1688,7 +1621,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         banks = networkFunctions.getBanks();
                     } catch (IOException e) {
-                        errors.add("Error getting banks "+e.toString());
+                        errors.add("Error getting banks " + e.toString());
                         throw e;
                     }
 
@@ -1711,7 +1644,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         bankController.createOrUpdateBank(bankList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Banks not downloaded "+e.toString());
+                        errors.add("Banks not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1723,7 +1656,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         fsDisc = networkFunctions.getFSDisc();
                     } catch (IOException e) {
-                        errors.add("Error getting FSDisc "+e.toString());
+                        errors.add("Error getting FSDisc " + e.toString());
                         throw e;
                     }
 
@@ -1746,7 +1679,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         fsDiscController.createOrUpdateFSDisc(fsdiskList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("FSDisc not downloaded "+e.toString());
+                        errors.add("FSDisc not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1766,7 +1699,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     try {
                         route = networkFunctions.getRoutes(repcode);
                     } catch (IOException e) {
-                        errors.add("Error getting routes "+e.toString());
+                        errors.add("Error getting routes " + e.toString());
                         throw e;
                     }
 
@@ -1790,7 +1723,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         routeController.createOrUpdateFRoute(routeList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Routes not downloaded "+e.toString());
+                        errors.add("Routes not downloaded " + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1812,7 +1745,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         routedet = networkFunctions.getRouteDets(repcode);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        errors.add("Error getting route details "+e.toString());
+                        errors.add("Error getting route details " + e.toString());
                         throw e;
                     }
 
@@ -1835,7 +1768,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                         }
                         routeDetController.InsertOrReplaceRouteDet(routeList);
                     } catch (JSONException | NumberFormatException e) {
-                        errors.add("Route details not downloaded"+e.toString());
+                        errors.add("Route details not downloaded" + e.toString());
 //                        ErrorUtil.logException("LoginActivity -> Authenticate -> doInBackground() # Process Routes and Outlets",
 //                                e, routes, BugReport.SEVERITY_HIGH);
 
@@ -1892,25 +1825,25 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                     return false;
                 }
             } catch (IOException e) {
-                Log.d("ERROR SYNC>>>>>", ">>>" +e.toString());
+                Log.d("ERROR SYNC>>>>>", ">>>" + e.toString());
 
-                 errors.add("Unable to reach the server.");
+                errors.add("Unable to reach the server.");
 
 //                ErrorUtil.logException(LoginActivity.this, "LoginActivity -> Authenticate -> doInBackground # Login",
 //                        e, null, BugReport.SEVERITY_LOW);
 
                 return false;
             } catch (JSONException e) {
-                Log.d("ERROR SYNC>>>>>", ">>>" +e.toString());
-                 errors.add("Received an invalid response from the server.");
+                Log.d("ERROR SYNC>>>>>", ">>>" + e.toString());
+                errors.add("Received an invalid response from the server.");
 
 //                ErrorUtil.logException(LoginActivity.this, "LoginActivity -> Authenticate -> doInBackground # Login",
 //                        e, loginResponse, BugReport.SEVERITY_HIGH);
 
                 return false;
             } catch (NumberFormatException e) {
-              //  errors.add(e.toString());
-                errors.add("Invalid format "+e.toString());
+                //  errors.add(e.toString());
+                errors.add("Invalid format " + e.toString());
                 return false;
             }
         }
@@ -1933,7 +1866,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
                 StringBuilder sb = new StringBuilder();
                 if (errors.size() == 1) {
                     sb.append("Following errors occurred");
-                    sb.append("\n  "+errors.get(0));
+                    sb.append("\n  " + errors.get(0));
                 } else {
                     sb.append("Following errors occurred");
                     for (String error : errors) {
@@ -1957,7 +1890,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
     }
 
     private void showErrorText(String s) {
-       // Toast.makeText(getActivity(), "" + s, Toast.LENGTH_LONG).show();
+        // Toast.makeText(getActivity(), "" + s, Toast.LENGTH_LONG).show();
         syncErrorResult(s);
     }
 
@@ -1966,7 +1899,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
 
     private void addRefNoResults_exp(String ref, int count) {
         resultListExpense.add(ref);
-        if(count == resultListExpense.size()) {
+        if (count == resultListExpense.size()) {
             mUploadResult(resultListExpense);
         }
     }
@@ -1977,20 +1910,21 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         for (String s : messages) {
             msg += s;
         }
-          AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-          alertDialogBuilder.setMessage(msg);
-          alertDialogBuilder.setTitle("Upload Summary");
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setMessage(msg);
+        alertDialogBuilder.setTitle("Upload Summary");
 
-          alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-              public void onClick(DialogInterface dialog, int id) {
-                  dialog.cancel();
-              }
-          });
-          AlertDialog alertD = alertDialogBuilder.create();
-          alertD.show();
-          alertD.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertD = alertDialogBuilder.create();
+        alertD.show();
+        alertD.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
+
     public void mUploadResult(String message) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -2008,6 +1942,7 @@ public class FragmentTools extends Fragment implements View.OnClickListener, Upl
         alertD.getWindow().setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
     }
+
     public void syncErrorResult(String message) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());

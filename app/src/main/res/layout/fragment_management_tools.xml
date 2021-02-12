@@ -291,7 +291,8 @@
                         android:layout_weight="1.5"
                         android:gravity="center_vertical|center_horizontal"
                         android:orientation="vertical"
-                        android:layout_marginLeft="@dimen/fragment_tool_left_margin">
+                        android:layout_marginLeft="@dimen/fragment_tool_left_margin"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/imgImage"
@@ -316,7 +317,8 @@
                         android:layout_weight="1.5"
                         android:gravity="center_vertical|center_horizontal"
                         android:orientation="vertical"
-                        android:layout_marginRight="@dimen/fragment_tool_left_margin">
+                        android:layout_marginRight="@dimen/fragment_tool_left_margin"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/imgVideo"

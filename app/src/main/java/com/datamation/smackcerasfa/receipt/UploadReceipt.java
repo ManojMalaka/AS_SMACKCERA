@@ -1,12 +1,15 @@
 package com.datamation.smackcerasfa.receipt;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.datamation.smackcerasfa.R;
@@ -44,148 +47,156 @@ import retrofit2.Response;
 
 public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, ArrayList<ReceiptHed>> {
 
-	Context context;
-	ProgressDialog dialog;
-	private Handler mHandler;
-	UploadTaskListener taskListener;
-	NetworkFunctions networkFunctions;
-	int totalRecords;
-	ArrayList<ReceiptHed> fReciptList =  new ArrayList<>();
+    Context context;
+    ProgressDialog dialog;
+    private Handler mHandler;
+    UploadTaskListener taskListener;
+    NetworkFunctions networkFunctions;
+    List<String> resultListPreSale;
+    int totalRecords;
+    ArrayList<ReceiptHed> fReciptList = new ArrayList<>();
 
-	public static final String SETTINGS = "SETTINGS";
-	public static SharedPreferences localSP;
+    public static final String SETTINGS = "SETTINGS";
+    public static SharedPreferences localSP;
 
-	public UploadReceipt(Context context, UploadTaskListener taskListener,ArrayList<ReceiptHed> recList) {
+    public UploadReceipt(Context context, UploadTaskListener taskListener, ArrayList<ReceiptHed> recList) {
+        resultListPreSale = new ArrayList<>();
+        this.context = context;
+        this.taskListener = taskListener;
+        mHandler = new Handler(Looper.getMainLooper());
+        localSP = context.getSharedPreferences(SETTINGS, 0);
+        fReciptList.addAll(recList);
+    }
 
-		this.context = context;
-		this.taskListener = taskListener;
-		mHandler = new Handler(Looper.getMainLooper());
-		localSP = context.getSharedPreferences(SETTINGS, 0);
-		fReciptList.addAll(recList);
-	}
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        dialog = new ProgressDialog(context);
+        dialog.show();
+    }
 
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-		dialog = new ProgressDialog(context);
-		dialog.show();
-	}
+    @Override
+    protected ArrayList<ReceiptHed> doInBackground(ArrayList<ReceiptHed>... params) {
 
-	@Override
-	protected ArrayList<ReceiptHed> doInBackground(ArrayList<ReceiptHed>... params) {
+        int recordCount = 0;
+        publishProgress(recordCount);
 
-		int recordCount = 0;
-		publishProgress(recordCount);
-		
-		ArrayList<ReceiptHed> RCSList = fReciptList;
-		totalRecords = RCSList.size();
-		networkFunctions = new NetworkFunctions(context);
-		final String sp_url =localSP.getString("URL", "").toString();
-		String URL="http://"+sp_url;
+        final  ArrayList<ReceiptHed> RCSList = fReciptList;
+        totalRecords = RCSList.size();
+        networkFunctions = new NetworkFunctions(context);
+        final String sp_url = localSP.getString("URL", "").toString();
+        String URL = "http://" + sp_url;
 
-		for(final ReceiptHed c : RCSList){
-			
-//			List<String> List = new ArrayList<String>();
-////
-//			String sJsonHed = new Gson().toJson(c);
-////
-//			List.add(sJsonHed);
-////			String sURL = URL + context.getResources().getString(R.string.ConnectionURL) + "/insertFrecHed";
-//			boolean bStatus = false;
-//			try {
-//				bStatus = NetworkFunctions.mHttpManager(networkFunctions.syncReceipt(),List.toString());
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			// boolean bStatus = UtilityContainer.mHttpManager(sURL, new Gson().toJson(c));
-//
-//			if (bStatus) {
-//				c.setFPRECHED_ISSYNCED("1");
-//			} else {
-//				c.setFPRECHED_ISSYNCED("0");
-//			}
-//
-			
-//			Log.v("## Json ##",  List.toString());
+        for (final ReceiptHed c : RCSList) {
 
-			try {
-				String content_type = "application/json";
-				ApiInterface apiInterface = ApiCllient.getClient(context).create(ApiInterface.class);
-				JsonParser jsonParser = new JsonParser();
-				String recJson = new Gson().toJson(c);
-				JsonObject objectFromString = jsonParser.parse(recJson).getAsJsonObject();
-				JsonArray jsonArray = new JsonArray();
-				jsonArray.add(objectFromString);
-				Call<String> resultCall = apiInterface.uploadReceipt(jsonArray, content_type);
-				resultCall.enqueue(new Callback<String>() {
-					@Override
-					public void onResponse(Call<String> call, Response<String> response) {
-						int status = response.code();
-						Log.d(">>>response code", ">>>res " + status);
-						Log.d(">>>response message", ">>>res " + response.message());
+            try {
+                String content_type = "application/json";
+                ApiInterface apiInterface = ApiCllient.getClient(context).create(ApiInterface.class);
+                JsonParser jsonParser = new JsonParser();
+                String recJson = new Gson().toJson(c);
+                JsonObject objectFromString = jsonParser.parse(recJson).getAsJsonObject();
+                JsonArray jsonArray = new JsonArray();
+                jsonArray.add(objectFromString);
+                Call<String> resultCall = apiInterface.uploadReceipt(jsonArray, content_type);
+                resultCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        int status = response.code();
+                        Log.d(">>>response code", ">>>res " + status);
+                        Log.d(">>>response message", ">>>res " + response.message());
 
-						String resmsg = ""+response.body().toString();
-						if (status == 200 && !resmsg.equals("") && !resmsg.equals(null)) {
-							mHandler.post(new Runnable() {
-								@Override
-								public void run() {
-									c.setFPRECHED_ISSYNCED("1");
-									new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(),"1");
-								}
-							});
-						} else {
+                        String resmsg = "" + response.body().toString();
+                        if (status == 200 && !resmsg.equals("") && !resmsg.equals(null)) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    c.setFPRECHED_ISSYNCED("1");
+                                    addRefNoResults(c.getFPRECHED_REFNO() +" --> Success\n",RCSList.size());
+                                    new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(), "1");
+                                }
+                            });
+                        } else {
 
-							c.setFPRECHED_ISSYNCED("0");
-							new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(),"0");
-						}
-					}
+                            c.setFPRECHED_ISSYNCED("0");
+                            addRefNoResults(c.getFPRECHED_REFNO() +" --> Failed\n",RCSList.size());
+                            new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(), "0");
+                        }
+                    }
 
-					@Override
-					public void onFailure(Call<String> call, Throwable t) {
-						Toast.makeText(context, "Error response "+t.toString(), Toast.LENGTH_SHORT).show();
-					}
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Toast.makeText(context, "Error response " + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ++recordCount;
+            publishProgress(recordCount);
+        }
+
+        return RCSList;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        dialog.setMessage("Uploading.. Receipt Record " + values[0] + "/" + totalRecords);
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<ReceiptHed> RCSList) {
+        super.onPostExecute(RCSList);
+        List<String> list = new ArrayList<>();
+
+        if (RCSList.size() > 0) {
+            list.add("\nRECEIPT");
+            list.add("------------------------------------\n");
+        }
+
+        int i = 1;
+		for (ReceiptHed c : RCSList) {
+
+			if (c.getFPRECHED_ISSYNCED().equals("1")) {
+				list.add(i + ". " + c.getFPRECHED_REFNO()+ " --> Success\n");
+			} else {
+				list.add(i + ". " + c.getFPRECHED_REFNO() + " --> Failed\n");
 			}
-				
-				++recordCount;
-				publishProgress(recordCount);
-			}
-
-		return RCSList;
-	}
-
-	@Override
-	protected void onProgressUpdate(Integer... values) {
-		super.onProgressUpdate(values);
-		dialog.setMessage("Uploading.. Receipt Record " + values[0] + "/" + totalRecords);
-	}
-
-	@Override
-	protected void onPostExecute(ArrayList<ReceiptHed> RCSList) {
-		super.onPostExecute(RCSList);
-		List<String> list = new ArrayList<>();
-
-		if (RCSList.size() > 0) {
-			list.add("\nRECEIPT");
-			list.add("------------------------------------\n");
+			i++;
 		}
 
-		int i = 1;
-//		for (ReceiptHed c : RCSList) {
-//			new ReceiptController(context).updateIsSyncedReceipt(c);
-//
-//			if (c.getFPRECHED_ISSYNCED().equals("1")) {
-//				list.add(i + ". " + c.getFPRECHED_REFNO()+ " --> Success\n");
-//			} else {
-//				list.add(i + ". " + c.getFPRECHED_REFNO() + " --> Failed\n");
-//			}
-//			i++;
-//		}
+        dialog.dismiss();
+        taskListener.onTaskCompleted(list);
+    }
 
-		dialog.dismiss();
-		taskListener.onTaskCompleted(list);
-	}
+    private void addRefNoResults(String ref, int count) {
+        resultListPreSale.add(ref);
+        if(count == resultListPreSale.size()) {
+            mUploadResult(resultListPreSale);
+        }
+    }
+
+    public void mUploadResult(List<String> messages) {
+        String msg = "";
+        for (String s : messages) {
+            msg += s;
+        }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(msg);
+        alertDialogBuilder.setTitle("Upload Receipt Summary");
+
+        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertD = alertDialogBuilder.create();
+        alertD.show();
+        alertD.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
 
 }
+
+

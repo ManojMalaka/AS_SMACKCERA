@@ -154,6 +154,7 @@ public class UploadPreSales extends AsyncTask<ArrayList<Order>, Integer, ArrayLi
         dialog.dismiss();
         taskListener.onTaskCompleted(taskType,resultListPreSale);
     }
+
     private void addRefNoResults(String ref, int count) {
         resultListPreSale.add(ref);
         if(count == resultListPreSale.size()) {
