@@ -4,9 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.datamation.smackcerasfa.R;
+import com.datamation.smackcerasfa.api.ApiCllient;
+import com.datamation.smackcerasfa.api.ApiInterface;
+import com.datamation.smackcerasfa.controller.OrderController;
 import com.datamation.smackcerasfa.controller.ReceiptController;
 import com.datamation.smackcerasfa.helpers.NetworkFunctions;
 import com.datamation.smackcerasfa.helpers.UploadTaskListener;
@@ -14,14 +20,33 @@ import com.datamation.smackcerasfa.model.Debtor;
 import com.datamation.smackcerasfa.model.ReceiptHed;
 import com.datamation.smackcerasfa.model.SalRep;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, ArrayList<ReceiptHed>> {
 
 	Context context;
 	ProgressDialog dialog;
+	private Handler mHandler;
 	UploadTaskListener taskListener;
 	NetworkFunctions networkFunctions;
 	int totalRecords;
@@ -34,6 +59,7 @@ public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, Arr
 
 		this.context = context;
 		this.taskListener = taskListener;
+		mHandler = new Handler(Looper.getMainLooper());
 		localSP = context.getSharedPreferences(SETTINGS, 0);
 		fReciptList.addAll(recList);
 	}
@@ -57,76 +83,71 @@ public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, Arr
 		final String sp_url =localSP.getString("URL", "").toString();
 		String URL="http://"+sp_url;
 
-		for(ReceiptHed c : RCSList){
+		for(final ReceiptHed c : RCSList){
 			
-			List<String> List = new ArrayList<String>();
+//			List<String> List = new ArrayList<String>();
+////
+//			String sJsonHed = new Gson().toJson(c);
+////
+//			List.add(sJsonHed);
+////			String sURL = URL + context.getResources().getString(R.string.ConnectionURL) + "/insertFrecHed";
+//			boolean bStatus = false;
+//			try {
+//				bStatus = NetworkFunctions.mHttpManager(networkFunctions.syncReceipt(),List.toString());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			// boolean bStatus = UtilityContainer.mHttpManager(sURL, new Gson().toJson(c));
+//
+//			if (bStatus) {
+//				c.setFPRECHED_ISSYNCED("1");
+//			} else {
+//				c.setFPRECHED_ISSYNCED("0");
+//			}
+//
 			
-			String sJsonHed = new Gson().toJson(c);
-			
-			List.add(sJsonHed);
-//			String sURL = URL + context.getResources().getString(R.string.ConnectionURL) + "/insertFrecHed";
-			boolean bStatus = false;
+//			Log.v("## Json ##",  List.toString());
+
 			try {
-				bStatus = NetworkFunctions.mHttpManager(networkFunctions.syncReceipt(),List.toString());
+				String content_type = "application/json";
+				ApiInterface apiInterface = ApiCllient.getClient(context).create(ApiInterface.class);
+				JsonParser jsonParser = new JsonParser();
+				String recJson = new Gson().toJson(c);
+				JsonObject objectFromString = jsonParser.parse(recJson).getAsJsonObject();
+				JsonArray jsonArray = new JsonArray();
+				jsonArray.add(objectFromString);
+				Call<String> resultCall = apiInterface.uploadReceipt(jsonArray, content_type);
+				resultCall.enqueue(new Callback<String>() {
+					@Override
+					public void onResponse(Call<String> call, Response<String> response) {
+						int status = response.code();
+						Log.d(">>>response code", ">>>res " + status);
+						Log.d(">>>response message", ">>>res " + response.message());
+
+						String resmsg = ""+response.body().toString();
+						if (status == 200 && !resmsg.equals("") && !resmsg.equals(null)) {
+							mHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									c.setFPRECHED_ISSYNCED("1");
+									new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(),"1");
+								}
+							});
+						} else {
+
+							c.setFPRECHED_ISSYNCED("0");
+							new ReceiptController(context).updateIsSyncedReceipt(c.getFPRECHED_REFNO(),"0");
+						}
+					}
+
+					@Override
+					public void onFailure(Call<String> call, Throwable t) {
+						Toast.makeText(context, "Error response "+t.toString(), Toast.LENGTH_SHORT).show();
+					}
+				});
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// boolean bStatus = UtilityContainer.mHttpManager(sURL, new Gson().toJson(c));
-
-			if (bStatus) {
-				c.setFPRECHED_ISSYNCED("1");
-			} else {
-				c.setFPRECHED_ISSYNCED("0");
-			}
-			
-			
-			Log.v("## Json ##",  List.toString());
-			
-//			try {
-//			// PDADBWebServiceMO
-//			HttpPost requestfDam = new HttpPost(URL+ context.getResources().getString(R.string.ConnectionURL) +"/insertFrecHed");
-//			StringEntity entityfDam = new StringEntity( List.toString(), "UTF-8");
-//			entityfDam.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-//			entityfDam.setContentType("application/json");
-//			requestfDam.setEntity(entityfDam);
-//			// Send request to WCF service
-//			DefaultHttpClient httpClientfDamRec = new DefaultHttpClient();
-//
-//
-//			HttpResponse responsefDamRec = httpClientfDamRec.execute(requestfDam);
-//			HttpEntity entityfDamEntity = responsefDamRec.getEntity();
-//			InputStream is = entityfDamEntity.getContent();
-//
-//			//StatusLine statusLine = responsefDamRec.getStatusLine();
-//		    //int statusCode = statusLine.getStatusCode();
-//
-//				if (is != null)
-//				{
-//					BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"), 8);
-//				    StringBuilder sb = new StringBuilder();
-//
-//				    String line = null;
-//				    while ((line = reader.readLine()) != null){
-//				        sb.append(line + "\n");
-//				    }
-//
-//				   is.close();
-//
-//				   String result = sb.toString();
-//				   String result_fDamRec = result.replace("\"", "");
-//
-//				   Log.e("response", "connect:" + result_fDamRec);
-//
-//				   if (result_fDamRec.trim().equals("200")){
-//						 c.setSynced(true);
-//					}else {
-//						c.setSynced(false);
-//					}
-//				}
-//				}catch(Exception e){
-//
-//					e.getStackTrace();
-//				}
 				
 				++recordCount;
 				publishProgress(recordCount);
@@ -152,16 +173,16 @@ public class UploadReceipt extends AsyncTask<ArrayList<ReceiptHed>, Integer, Arr
 		}
 
 		int i = 1;
-		for (ReceiptHed c : RCSList) {
-			new ReceiptController(context).updateIsSyncedReceipt(c);
-
-			if (c.getFPRECHED_ISSYNCED().equals("1")) {
-				list.add(i + ". " + c.getFPRECHED_REFNO()+ " --> Success\n");
-			} else {
-				list.add(i + ". " + c.getFPRECHED_REFNO() + " --> Failed\n");
-			}
-			i++;
-		}
+//		for (ReceiptHed c : RCSList) {
+//			new ReceiptController(context).updateIsSyncedReceipt(c);
+//
+//			if (c.getFPRECHED_ISSYNCED().equals("1")) {
+//				list.add(i + ". " + c.getFPRECHED_REFNO()+ " --> Success\n");
+//			} else {
+//				list.add(i + ". " + c.getFPRECHED_REFNO() + " --> Failed\n");
+//			}
+//			i++;
+//		}
 
 		dialog.dismiss();
 		taskListener.onTaskCompleted(list);

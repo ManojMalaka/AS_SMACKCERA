@@ -131,7 +131,10 @@ public interface ApiInterface {
 
     @POST("insertOrdersNew")
     Call<String> uploadOrder(@Body JsonArray orderlist, @Header("Content-Type") String cont_type);
-    //Call<String> uploadOrder(@Body String orderlist, @Header("Content-Type") String cont_type);
+
+    //******MMS - 2021/02/12********
+    @POST("insertFrecHed")
+    Call<String> uploadReceipt(@Body JsonArray rechedlist, @Header("Content-Type") String cont_type);
 
     //******kaveesha - 04-03-2020********
     @POST("insertFDaynPrdHed")

@@ -1106,7 +1106,7 @@ public class ReceiptController {
         return result2;
     }
 
-    public int updateIsSyncedReceipt(ReceiptHed mapper) {
+    public int updateIsSyncedReceipt(String refno, String res) {
 
         int count = 0;
 
@@ -1120,12 +1120,9 @@ public class ReceiptController {
         try {
             ContentValues values = new ContentValues();
 
-            values.put(FPRECHED_ISSYNCED, "1");
+            values.put(FPRECHED_ISSYNCED, res);
 
-            if (mapper.getFPRECHED_ISSYNCED().equals("1")) {
-                count = dB.update(TABLE_FPRECHED, values, dbHelper.REFNO + " =?",
-                        new String[]{String.valueOf(mapper.getFPRECHED_REFNO())});
-            }
+            count = dB.update(TABLE_FPRECHEDS, values, dbHelper.REFNO + " =?", new String[]{refno});
 
         } catch (Exception e) {
 
@@ -1140,6 +1137,41 @@ public class ReceiptController {
         return count;
 
     }
+
+//    public int updateIsSyncedReceipt(ReceiptHed mapper) {
+//
+//        int count = 0;
+//
+//        if (dB == null) {
+//            open();
+//        } else if (!dB.isOpen()) {
+//            open();
+//        }
+//        Cursor cursor = null;
+//
+//        try {
+//            ContentValues values = new ContentValues();
+//
+//            values.put(FPRECHED_ISSYNCED, "1");
+//
+//            if (mapper.getFPRECHED_ISSYNCED().equals("0")) {
+//                count = dB.update(TABLE_FPRECHED, values, dbHelper.REFNO + " =?",
+//                        new String[]{String.valueOf(mapper.getFPRECHED_REFNO())});
+//            }
+//
+//        } catch (Exception e) {
+//
+//            Log.v(TAG + " Exception", e.toString());
+//
+//        } finally {
+//            if (cursor != null) {
+//                cursor.close();
+//            }
+//            dB.close();
+//        }
+//        return count;
+//
+//    }
 
     public ArrayList<ReceiptHed> getAllUnsyncedRecHed() {
         if (dB == null) {
@@ -1291,9 +1323,9 @@ public class ReceiptController {
         String selectQuery;
         ReceiptHed mapper = new ReceiptHed();
         try {
-            selectQuery = "select * from " + TABLE_FPRECHEDS + " Where "+ FPRECHED_ISACTIVE + "='0' and ("+FPRECHED_ADDDATE+" >= '"+fromDt+"' and "+FPRECHED_ADDDATE+" <= '"+toDt+"')";
+            selectQuery = "select * from " + TABLE_FPRECHEDS + " Where " + FPRECHED_ISACTIVE + "='0' and (" + FPRECHED_ADDDATE + " >= '" + fromDt + "' and " + FPRECHED_ADDDATE + " <= '" + toDt + "')";
 
-            localSP = context.getSharedPreferences(SETTINGS,0);
+            localSP = context.getSharedPreferences(SETTINGS, 0);
             Cursor cursor = dB.rawQuery(selectQuery, null);
 
             while (cursor.moveToNext()) {

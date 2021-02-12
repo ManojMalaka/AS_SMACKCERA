@@ -152,10 +152,7 @@ public class BankController {
 
                 bank.setFBANK_BANK_CODE(cursor.getString(cursor.getColumnIndex(FBANK_BANK_CODE)));
                 bank.setFBANK_BANK_NAME(cursor.getString(cursor.getColumnIndex(FBANK_BANK_NAME))+" - "+cursor.getString(cursor.getColumnIndex(FBANK_BRANCH)));
-
-
                 list.add(bank);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,6 +162,34 @@ public class BankController {
         }
 
         return list;
+    }
+
+    public Bank getBankByName(String  name) {
+        if (dB == null) {
+            open();
+        } else if (!dB.isOpen()) {
+            open();
+        }
+
+        String selectQuery = "select * from " + TABLE_FBANK +" where (select bankname || ' - ' || Branch) like '" + name + "'";
+
+        Cursor cursor = dB.rawQuery(selectQuery, null);
+        Bank bank = new Bank();
+        try {
+            while (cursor.moveToNext()) {
+
+                bank.setFBANK_BANK_CODE(cursor.getString(cursor.getColumnIndex(FBANK_BANK_CODE)));
+                bank.setFBANK_BANK_NAME(cursor.getString(cursor.getColumnIndex(FBANK_BANK_NAME))+" - "+cursor.getString(cursor.getColumnIndex(FBANK_BRANCH)));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dB.close();
+
+        }
+
+        return bank;
     }
 
 

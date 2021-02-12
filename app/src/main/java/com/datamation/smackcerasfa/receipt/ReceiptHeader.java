@@ -508,6 +508,7 @@ public class ReceiptHeader extends Fragment {
         ReceiptActivity activity = new ReceiptActivity();
         mSharedPref.setGlobalVal("ReckeyRemnant", "0");
         new OutstandingController(getActivity()).ClearFddbNoteData();
+        BankController bnk = new BankController(getContext());
         ReceiptHed recHed = new ReceiptHed();
 
         if (activity.selectedRecHed != null) {
@@ -545,7 +546,7 @@ public class ReceiptHeader extends Fragment {
             recHed.setFPRECHED_CHQNO("");
             recHed.setFPRECHED_CHQDATE("");
         } else if (spnPayMode.getSelectedItemPosition() == 2) {
-            recHed.setFPRECHED_CUSBANK(spnBank1.getSelectedItem().toString());
+            recHed.setFPRECHED_CUSBANK(bnk.getBankByName(spnBank1.getSelectedItem().toString()).getFBANK_BANK_CODE());
             recHed.setFPRECHED_PAYTYPE("CH");
             recHed.setFPRECHED_BANKCODE("");
             recHed.setFPRECHED_BRANCHCODE("");
@@ -553,7 +554,7 @@ public class ReceiptHeader extends Fragment {
             recHed.setFPRECHED_CHQDATE(txtCHQDate.getText().toString());
             mSharedPref.setGlobalVal("ReckeyCHQNo", txtCHQNO.getText().toString());
         } else if (spnPayMode.getSelectedItemPosition() == 3) {
-            recHed.setFPRECHED_CUSBANK(spnCardType.getSelectedItem().toString());
+            recHed.setFPRECHED_CUSBANK(bnk.getBankByName(spnBank1.getSelectedItem().toString()).getFBANK_BANK_CODE());
             recHed.setFPRECHED_PAYTYPE("CC");
             recHed.setFPRECHED_BANKCODE("");
             recHed.setFPRECHED_BRANCHCODE("");
