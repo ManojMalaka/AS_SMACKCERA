@@ -104,7 +104,7 @@ public class PreOrderAdapter extends BaseAdapter {
                 int cases = Integer.parseInt(viewHolder.lblCase.getText().toString());
 //                qty = qty + (cases * Integer.parseInt(product.getPREPRODUCT_UNIT()));
                 qty = qty - 1;
-                if (qty > 0) {
+                if (qty >= 0) {
 
 
 

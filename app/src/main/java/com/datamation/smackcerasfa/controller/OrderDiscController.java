@@ -144,6 +144,7 @@ public class OrderDiscController {
                 ContentValues values = new ContentValues();
 
                 values.put(DatabaseHelper.REFNO, orderDisc.getRefNo());
+                values.put(FORDDISC_REFNO1, orderDisc.getRefNo1());
                 values.put(DatabaseHelper.TXNDATE, orderDisc.getTxnDate());
                 values.put(FORDDISC_ITEMCODE, orderDisc.getItemCode());
                 values.put(FORDDISC_DISAMT, orderDisc.getDisAmt());

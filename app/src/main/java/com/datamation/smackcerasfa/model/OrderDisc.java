@@ -5,64 +5,64 @@ import com.google.gson.annotations.SerializedName;
 public class OrderDisc {
 
   //  @SerializedName("RefNo")
-    private String RefNo;
+    private String ORDDISC_REFNO;
    // @SerializedName("TxnDate")
-    private String TxnDate;
+    private String ORDDISC_TXNDATE;
    // @SerializedName("RefNo1")
-    private String RefNo1;
+    private String ORDDISC_REFNO1;
    // @SerializedName("ItemCode")
-    private String ItemCode;
+    private String ORDDISC_ITEMCODE;
    // @SerializedName("DisAmt")
-    private String DisAmt;
+    private String ORDDISC_DISAMT;
   //  @SerializedName("DisPer")
-    private String DisPer;
+    private String ORDDISC_DISPER;
 
     public String getRefNo() {
-        return RefNo;
+        return ORDDISC_REFNO;
     }
 
     public void setRefNo(String refNo) {
-        RefNo = refNo;
+        ORDDISC_REFNO = refNo;
     }
 
     public String getTxnDate() {
-        return TxnDate;
+        return ORDDISC_TXNDATE;
     }
 
     public void setTxnDate(String txnDate) {
-        TxnDate = txnDate;
+        ORDDISC_TXNDATE = txnDate;
     }
 
     public String getRefNo1() {
-        return RefNo1;
+        return ORDDISC_REFNO1;
     }
 
     public void setRefNo1(String refNo1) {
-        RefNo1 = refNo1;
+        ORDDISC_REFNO1 = refNo1;
     }
 
     public String getItemCode() {
-        return ItemCode;
+        return ORDDISC_ITEMCODE;
     }
 
     public void setItemCode(String itemCode) {
-        ItemCode = itemCode;
+        ORDDISC_ITEMCODE = itemCode;
     }
 
     public String getDisAmt() {
-        return DisAmt;
+        return ORDDISC_DISAMT;
     }
 
     public void setDisAmt(String disAmt) {
-        DisAmt = disAmt;
+        ORDDISC_DISAMT = disAmt;
     }
 
     public String getDisPer() {
-        return DisPer;
+        return ORDDISC_DISPER;
     }
 
     public void setDisPer(String disPer) {
-        DisPer = disPer;
+        ORDDISC_DISPER = disPer;
     }
 
 

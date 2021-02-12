@@ -986,6 +986,8 @@ public class OrderDetailFragment extends Fragment {
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt1_DisPer)).doubleValue());
 
                 DisItmDet.setRefNo(OrdDetRef);
+                DisItmDet.setRefNo1("");
+                DisItmDet.setTxnDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
                 DisItmDet.setItemCode(DisItemCode);
                 DisItmDet.setDisPer(String.valueOf(Prt1_DisPer.doubleValue()));
                 DisItmDet.setDisAmt(DisAmount);
@@ -999,6 +1001,8 @@ public class OrderDetailFragment extends Fragment {
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt2_DisPer)).doubleValue());
 
                 DisItmDet.setRefNo(det.getFORDERDET_REFNO());
+                DisItmDet.setRefNo1("");
+                DisItmDet.setTxnDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
                 DisItmDet.setItemCode(DisItemCode);
                 DisItmDet.setDisPer(String.valueOf(Prt2_DisPer.doubleValue()));
                 DisItmDet.setDisAmt(DisAmount);
@@ -1011,6 +1015,8 @@ public class OrderDetailFragment extends Fragment {
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt3_DisPer)).doubleValue());
 
                 DisItmDet.setRefNo(det.getFORDERDET_REFNO());
+                DisItmDet.setRefNo1("");
+                DisItmDet.setTxnDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
                 DisItmDet.setItemCode(DisItemCode);
                 DisItmDet.setDisPer(String.valueOf(Prt3_DisPer.doubleValue()));
                 DisItmDet.setDisAmt(DisAmount);
@@ -1023,6 +1029,8 @@ public class OrderDetailFragment extends Fragment {
                 DisAmount = String.valueOf((((ItemValue.add(DiscountValue)).divide(hund_Disper)).multiply(Prt4_DisPer)).doubleValue());
 
                 DisItmDet.setRefNo(det.getFORDERDET_REFNO());
+                DisItmDet.setRefNo1("");
+                DisItmDet.setTxnDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
                 DisItmDet.setItemCode(DisItemCode);
                 DisItmDet.setDisPer(String.valueOf(Prt4_DisPer.doubleValue()));
                 DisItmDet.setDisAmt(DisAmount);
